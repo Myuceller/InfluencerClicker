@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { LogIn, LogOut, UserPlus } from "lucide-react";
+import { Github, LogIn, LogOut, UserPlus } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 
@@ -130,6 +130,33 @@ export function AuthPanel() {
               : "계정 만들기"}
         </Button>
       </form>
+
+      <div className="my-4 flex items-center gap-3 text-xs text-white/45">
+        <span className="h-px flex-1 bg-white/10" />
+        또는
+        <span className="h-px flex-1 bg-white/10" />
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => signIn("github")}
+          className="h-11 gap-2 px-4"
+        >
+          <Github size={16} />
+          GitHub 로그인
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => signIn("google")}
+          className="h-11 gap-2 px-4"
+        >
+          <span className="text-base font-bold">G</span>
+          Google 로그인
+        </Button>
+      </div>
     </Card>
   );
 }
