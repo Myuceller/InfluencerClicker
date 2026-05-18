@@ -35,5 +35,10 @@ Do not use MVC.
 - Do not hardcode upgrade logic inside UI components.
 - Save progress with localStorage.
 
+## Git Workflow
+- Use `dev` as the integration branch.
+- Start each new task from a fresh branch off `dev`.
+- Merge completed task branches back into `dev`.
+
 ## UI Direction
 Funny, polished, social-media-inspired, meme-like, but not messy.
