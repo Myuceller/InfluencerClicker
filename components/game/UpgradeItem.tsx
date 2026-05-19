@@ -16,9 +16,13 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
   const balance = upgrade.currency === "likes" ? likes : money;
   const effectLabel = {
     thumbnail: "클릭당 썸네일",
+    thumbnailMultiplier: "클릭 썸네일 배율",
+    autoThumbnail: "초당 자동 썸네일",
     likesPerThumbnail: "썸네일당 좋아요",
+    likesMultiplier: "좋아요 배율",
     followerConversion: "팔로워 전환 효율",
     moneyPerFollower: "팔로워당 수익",
+    moneyMultiplier: "수익 배율",
   }[upgrade.effectType];
 
   return (

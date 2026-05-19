@@ -15,10 +15,14 @@ import { loadGameState, saveGameState } from "../utils/storage";
 type GameState = PersistedGameState & {
   hydrated: boolean;
   thumbnailsPerClick: number;
+  thumbnailMultiplier: number;
+  thumbnailsPerSecond: number;
   likesPerThumbnail: number;
+  likesMultiplier: number;
   likesPerSecond: number;
   likesPerFollower: number;
   moneyPerFollower: number;
+  moneyMultiplier: number;
   moneyPerSecond: number;
   notifications: Notification[];
   hydrate: () => void;
@@ -77,8 +81,12 @@ function getComputedState(
   return {
     ...derived,
     followers,
-    likesPerSecond: state.thumbnails * derived.likesPerThumbnail,
-    moneyPerSecond: followers * derived.moneyPerFollower,
+    thumbnailsPerClick:
+      derived.thumbnailsPerClick * derived.thumbnailMultiplier,
+    likesPerSecond:
+      state.thumbnails * derived.likesPerThumbnail * derived.likesMultiplier,
+    moneyPerSecond:
+      followers * derived.moneyPerFollower * derived.moneyMultiplier,
   };
 }
 
@@ -165,12 +173,16 @@ export const useGameStore = create<GameState>((set, get) => ({
   tick: () => {
     set((state) => {
       const shouldNotify = Math.random() > 0.7;
-      const likesGained = state.thumbnails * state.likesPerThumbnail;
+      const thumbnails = state.thumbnails + state.thumbnailsPerSecond;
+      const likesGained =
+        thumbnails * state.likesPerThumbnail * state.likesMultiplier;
       const totalLikes = state.totalLikes + likesGained;
       const followers = Math.floor(totalLikes / state.likesPerFollower);
-      const moneyPerSecond = followers * state.moneyPerFollower;
+      const moneyPerSecond =
+        followers * state.moneyPerFollower * state.moneyMultiplier;
       const nextState = {
         ...state,
+        thumbnails,
         likes: state.likes + likesGained,
         totalLikes,
         followers,

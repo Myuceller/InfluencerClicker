@@ -18,8 +18,20 @@ export function calculateDerivedStats(upgradeLevels: Record<string, number>) {
         totals.thumbnailsPerClick += bonus;
       }
 
+      if (upgrade.effectType === "thumbnailMultiplier") {
+        totals.thumbnailMultiplier += bonus;
+      }
+
+      if (upgrade.effectType === "autoThumbnail") {
+        totals.thumbnailsPerSecond += bonus;
+      }
+
       if (upgrade.effectType === "likesPerThumbnail") {
         totals.likesPerThumbnail += bonus;
+      }
+
+      if (upgrade.effectType === "likesMultiplier") {
+        totals.likesMultiplier += bonus;
       }
 
       if (upgrade.effectType === "followerConversion") {
@@ -30,13 +42,21 @@ export function calculateDerivedStats(upgradeLevels: Record<string, number>) {
         totals.moneyPerFollower += bonus;
       }
 
+      if (upgrade.effectType === "moneyMultiplier") {
+        totals.moneyMultiplier += bonus;
+      }
+
       return totals;
     },
     {
       thumbnailsPerClick: 1,
+      thumbnailMultiplier: 1,
+      thumbnailsPerSecond: 0,
       likesPerThumbnail: 0.1,
+      likesMultiplier: 1,
       likesPerFollower: 100,
       moneyPerFollower: 0,
+      moneyMultiplier: 1,
     },
   );
 }

@@ -2,9 +2,13 @@ export type ResourceKey = "thumbnails" | "likes" | "followers" | "money";
 
 export type UpgradeEffectType =
   | "thumbnail"
+  | "thumbnailMultiplier"
+  | "autoThumbnail"
   | "likesPerThumbnail"
+  | "likesMultiplier"
   | "followerConversion"
-  | "moneyPerFollower";
+  | "moneyPerFollower"
+  | "moneyMultiplier";
 
 export type Upgrade = {
   id: string;
