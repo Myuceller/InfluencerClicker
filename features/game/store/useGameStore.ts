@@ -185,6 +185,13 @@ export const useGameStore = create<GameState>((set, get) => ({
     set((state) => {
       const safeDeltaSeconds = Math.min(Math.max(deltaSeconds, 0), 1);
       const shouldNotify = shouldCheckNotification && Math.random() > 0.7;
+      const hasPassiveIncome =
+        state.autoLikesPerSecond > 0 || state.moneyPerSecond > 0;
+
+      if (!hasPassiveIncome && !shouldNotify) {
+        return state;
+      }
+
       const likesGained =
         state.autoLikesPerSecond * state.likesMultiplier * safeDeltaSeconds;
       const totalLikes = state.totalLikes + likesGained;
@@ -272,7 +279,7 @@ export function initializeGame() {
       }
 
       state.tick(deltaSeconds, shouldCheckNotification);
-    }, 100);
+    }, 250);
   }
 
   if (!saveIntervalId) {

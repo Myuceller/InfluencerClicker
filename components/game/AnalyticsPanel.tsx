@@ -18,20 +18,18 @@ function formatMultiplier(value: number) {
 }
 
 export function AnalyticsPanel() {
-  const {
-    totalClicks,
-    totalLikes,
-    likesPerClick,
-    autoLikesPerSecond,
-    clickMultiplier,
-    likesMultiplier,
-    likesPerSecond,
-    likesPerFollower,
-    followers,
-    moneyMultiplier,
-    moneyPerSecond,
-    playTimeSeconds,
-  } = useGameStore();
+  const totalClicks = useGameStore((state) => state.totalClicks);
+  const totalLikes = useGameStore((state) => state.totalLikes);
+  const likesPerClick = useGameStore((state) => state.likesPerClick);
+  const autoLikesPerSecond = useGameStore((state) => state.autoLikesPerSecond);
+  const clickMultiplier = useGameStore((state) => state.clickMultiplier);
+  const likesMultiplier = useGameStore((state) => state.likesMultiplier);
+  const likesPerSecond = useGameStore((state) => state.likesPerSecond);
+  const likesPerFollower = useGameStore((state) => state.likesPerFollower);
+  const followers = useGameStore((state) => state.followers);
+  const moneyMultiplier = useGameStore((state) => state.moneyMultiplier);
+  const moneyPerSecond = useGameStore((state) => state.moneyPerSecond);
+  const playTimeSeconds = useGameStore((state) => state.playTimeSeconds);
   const followerThreshold = Math.max(1, Math.floor(likesPerFollower));
   const likesUntilNextFollower =
     followerThreshold - (Math.floor(totalLikes) % followerThreshold);

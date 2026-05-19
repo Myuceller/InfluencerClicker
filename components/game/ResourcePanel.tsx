@@ -36,7 +36,14 @@ const resources = [
 ] as const;
 
 export function ResourcePanel() {
-  const state = useGameStore();
+  const likes = useGameStore((state) => state.likes);
+  const followers = useGameStore((state) => state.followers);
+  const money = useGameStore((state) => state.money);
+  const resourceValues = {
+    likes,
+    followers,
+    money,
+  };
 
   return (
     <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -50,7 +57,7 @@ export function ResourcePanel() {
             <Icon className={accent} size={16} />
           </div>
           <p className={`mt-2 text-xl font-bold sm:mt-3 sm:text-2xl ${valueClass}`}>
-            {formatNumber(state[key])}
+            {formatNumber(resourceValues[key])}
             {key === "money" ? "원" : ""}
           </p>
           <p className="mt-1 text-xs text-white/45">{hint}</p>
