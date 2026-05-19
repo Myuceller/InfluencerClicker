@@ -149,6 +149,7 @@ export function UpgradeItem({
       <Button
         onClick={handleBuyUpgrade}
         disabled={!canBuy}
+        variant={upgrade.currency === "likes" ? "likes" : "money"}
         className="h-10 min-w-28 gap-2 px-3 sm:h-11 sm:min-w-32 sm:px-4"
       >
         {locked ? (
