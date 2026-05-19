@@ -11,6 +11,7 @@ import {
 } from "../utils/calculate";
 import { loadCloudGameState, saveCloudGameState } from "../utils/cloudStorage";
 import { loadGameState, saveGameState } from "../utils/storage";
+import { isUpgradeRevealed } from "../utils/upgradeUnlocks";
 
 type GameState = PersistedGameState & {
   hydrated: boolean;
@@ -128,13 +129,18 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
   buyUpgrade: (upgradeId) => {
-    const upgrade = upgrades.find((item) => item.id === upgradeId);
+    const upgradeIndex = upgrades.findIndex((item) => item.id === upgradeId);
+    const upgrade = upgrades[upgradeIndex];
 
     if (!upgrade) {
       return;
     }
 
     set((state) => {
+      if (!isUpgradeRevealed(upgradeIndex, state.upgradeLevels)) {
+        return state;
+      }
+
       const currentLevel = state.upgradeLevels[upgradeId] ?? 0;
       const cost = calculateUpgradeCost(
         upgrade.baseCost,

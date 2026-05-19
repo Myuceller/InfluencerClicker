@@ -20,6 +20,24 @@ const pixelPalettes: Record<string, string> = {
 };
 
 const iconPatterns: Record<string, string[]> = {
+  locked: [
+    "....KKKKKKKK....",
+    "...KAAAAAAAAK...",
+    "..KAAAAAAAAAAK..",
+    "..KAAA....AAAK..",
+    "..KAA..KK..AAK..",
+    "..KAA.KAAK.AAK..",
+    "..KAA...AK.AAK..",
+    "..KAAAAK..AAAK..",
+    "..KAAAA..AAAAK..",
+    "..KAAAA..AAAAK..",
+    "..KAAAAAAAAAAK..",
+    "..KAAAAKKAAAAK..",
+    "..KAAAAKKAAAAK..",
+    "..KAAAAAAAAAAK..",
+    "...KAAAAAAAAK...",
+    "....KKKKKKKK....",
+  ],
   template: [
     "....KKKKKKKK....",
     "...KWWWWWWWWK...",
@@ -185,6 +203,7 @@ const iconPatterns: Record<string, string[]> = {
 };
 
 function getPatternForUpgrade(upgradeId: string) {
+  if (upgradeId === "locked") return iconPatterns.locked;
   if (
     upgradeId.includes("template") ||
     upgradeId.includes("hotkeys") ||

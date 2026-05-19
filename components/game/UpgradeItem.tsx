@@ -11,14 +11,20 @@ import { playUiBlip } from "@/features/game/utils/sound";
 import { useGameStore } from "@/features/game/store/useGameStore";
 import { UpgradePixelArt } from "./UpgradePixelArt";
 
-export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
+export function UpgradeItem({
+  upgrade,
+  locked = false,
+}: {
+  upgrade: Upgrade;
+  locked?: boolean;
+}) {
   const likes = useGameStore((state) => state.likes);
   const money = useGameStore((state) => state.money);
   const level = useGameStore((state) => state.upgradeLevels[upgrade.id] ?? 0);
   const buyUpgrade = useGameStore((state) => state.buyUpgrade);
   const cost = calculateUpgradeCost(upgrade.baseCost, level, upgrade.costMultiplier);
   const balance = upgrade.currency === "likes" ? likes : money;
-  const canBuy = balance >= cost;
+  const canBuy = !locked && balance >= cost;
   const [burstId, setBurstId] = useState(0);
   const progressToMilestone = Math.min(100, ((level % 10) / 10) * 100);
   const nextMilestone = Math.floor(level / 10) * 10 + 10;
@@ -34,7 +40,7 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
   }[upgrade.effectType];
 
   function handleBuyUpgrade() {
-    if (!canBuy) {
+    if (!canBuy || locked) {
       return;
     }
 
@@ -71,40 +77,65 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
           Lv +1
         </motion.span>
       )}
-      <UpgradePixelArt upgradeId={upgrade.id} active={level > 0} level={level} />
+      <UpgradePixelArt
+        upgradeId={locked ? "locked" : upgrade.id}
+        active={!locked && level > 0}
+        level={level}
+      />
       <div>
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="font-semibold">{upgrade.name}</h3>
+          <h3 className="font-semibold">{locked ? "???" : upgrade.name}</h3>
           <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/70">
-            Lv. {level}
+            {locked ? "잠김" : `Lv. ${level}`}
           </span>
         </div>
-        <p className="mt-1 text-xs text-white/70 sm:text-sm">{upgrade.description}</p>
-        <p className="mt-2 text-xs font-semibold text-pink-100">
-          +{formatNumber(upgrade.effectValue)} {effectLabel}
-        </p>
-        <div className="mt-3">
-          <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-white/45">
-            <span>강화 밀도</span>
-            <span>Lv. {nextMilestone}까지</span>
+        {locked ? (
+          <p className="mt-1 text-xs text-white/55 sm:text-sm">
+            이전 업그레이드를 1회 구매하면 공개됩니다.
+          </p>
+        ) : (
+          <>
+            <p className="mt-1 text-xs text-white/70 sm:text-sm">{upgrade.description}</p>
+            <p className="mt-2 text-xs font-semibold text-pink-100">
+              +{formatNumber(upgrade.effectValue)} {effectLabel}
+            </p>
+            <div className="mt-3">
+              <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-white/45">
+                <span>강화 밀도</span>
+                <span>Lv. {nextMilestone}까지</span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-yellow-300 via-pink-400 to-cyan-300"
+                  style={{ width: `${progressToMilestone}%` }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {locked && (
+          <div className="mt-3 grid grid-cols-5 gap-1">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <span key={index} className="h-1.5 rounded-full bg-white/10" />
+            ))}
           </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-yellow-300 via-pink-400 to-cyan-300"
-              style={{ width: `${progressToMilestone}%` }}
-            />
-          </div>
-        </div>
+        )}
       </div>
 
       <Button
         onClick={handleBuyUpgrade}
         disabled={!canBuy}
-          className="h-10 min-w-28 gap-2 px-3 sm:h-11 sm:min-w-32 sm:px-4"
+        className="h-10 min-w-28 gap-2 px-3 sm:h-11 sm:min-w-32 sm:px-4"
       >
-        {formatNumber(cost)}
-        {upgrade.currency === "money" ? "원" : ""}
-        <ArrowUpRight size={16} />
+        {locked ? (
+          "???"
+        ) : (
+          <>
+            {formatNumber(cost)}
+            {upgrade.currency === "money" ? "원" : ""}
+            <ArrowUpRight size={16} />
+          </>
+        )}
       </Button>
     </motion.div>
   );
