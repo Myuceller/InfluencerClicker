@@ -158,8 +158,8 @@ function ThumbnailPreview({
 
 const pixelScenes = [
   {
-    minFollowers: 0,
-    label: "방구석 크리에이터",
+    minLikes: 0,
+    label: "방구석 셀카",
     rows: [
       "................",
       "....PPP.........",
@@ -176,7 +176,7 @@ const pixelScenes = [
     ],
   },
   {
-    minFollowers: 25,
+    minLikes: 500,
     label: "조명 장착",
     rows: [
       "......RR........",
@@ -194,7 +194,7 @@ const pixelScenes = [
     ],
   },
   {
-    minFollowers: 100,
+    minLikes: 5000,
     label: "댓글 폭주",
     rows: [
       "..C...RR....C...",
@@ -212,7 +212,7 @@ const pixelScenes = [
     ],
   },
   {
-    minFollowers: 500,
+    minLikes: 50000,
     label: "브랜드 협찬",
     rows: [
       "..C...RR....C...",
@@ -229,6 +229,78 @@ const pixelScenes = [
       "...D.D.D........",
     ],
   },
+  {
+    minLikes: 500000,
+    label: "밈 폭발",
+    rows: [
+      "....YYYYYYYY....",
+      "...YRRRRRROYY...",
+      "..YRRYYYYRRRYY..",
+      ".YRRYYKKYYRRY...",
+      ".YRRYYYYYYRRY...",
+      "YRRRPPPPPPPRYY..",
+      "YRRPPWWWWPPPRY..",
+      "YRRPPWKKWPPPRY..",
+      ".YRRPPWWPPPRY...",
+      "..YRRPPPPPRY....",
+      "...YYYYYYYY.....",
+      "..CC......CC....",
+    ],
+  },
+  {
+    minLikes: 5000000,
+    label: "추천 탭 점령",
+    rows: [
+      "CCCCCCCCCCCCCCCC",
+      "CBBBBBBBBBBBBBBC",
+      "CBWWWWWWWWWWWWBC",
+      "CBWRRRWWWRRRWWBC",
+      "CBWWWWWWWWWWWWBC",
+      "CBWYYYYYYYYYYWBC",
+      "CBWYYYYYYYYYYWBC",
+      "CBWWWWWWWWWWWWBC",
+      "CBWKKKKKKKKKKWBC",
+      "CBWWWWWWWWWWWWBC",
+      "CBBBBBBBBBBBBBBC",
+      "CCCCCCCCCCCCCCCC",
+    ],
+  },
+  {
+    minLikes: 50000000,
+    label: "글로벌 밈",
+    rows: [
+      "......CCCC......",
+      "....CCBBBBCC....",
+      "...CBBWWWWBBC...",
+      "..CBWWGWWGWWBC..",
+      ".CBWWWWWWWWWWBC.",
+      ".CBWGGGGGGGGWBC.",
+      ".CBWGGWGGWGGWBC.",
+      ".CBWGGGGGGGGWBC.",
+      "..CBWWWWWWWWBC..",
+      "...CBBWWWWBBC...",
+      "....CCBBBBCC....",
+      "......CCCC......",
+    ],
+  },
+  {
+    minLikes: 500000000,
+    label: "인터넷 왕관",
+    rows: [
+      "....Y......Y....",
+      "...YYY....YYY...",
+      "..YYYYY..YYYYY..",
+      ".YYYYYYYYYYYYYY.",
+      ".YYKKYYYYYYKKYY.",
+      ".YYYYYYYYYYYYYY.",
+      "..YYYYYYYYYYYY..",
+      "...YYYYYYYYYY...",
+      "....YYYYYYYY....",
+      "....PPPPPPPP....",
+      "...PPPPPPPPPP...",
+      "................",
+    ],
+  },
 ];
 
 const pixelColors: Record<string, string> = {
@@ -241,17 +313,23 @@ const pixelColors: Record<string, string> = {
   R: "bg-cyan-200",
   C: "bg-white",
   G: "bg-emerald-200",
+  O: "bg-orange-400",
 };
 
-function PixelCreatorArt({ followers }: { followers: number }) {
+function PixelCreatorArt({ totalLikes }: { totalLikes: number }) {
   const scene =
-    [...pixelScenes].reverse().find((item) => followers >= item.minFollowers) ??
+    [...pixelScenes].reverse().find((item) => totalLikes >= item.minLikes) ??
     pixelScenes[0];
+  const sceneIndex = pixelScenes.findIndex((item) => item.label === scene.label);
+  const nextScene = pixelScenes[sceneIndex + 1];
+  const likesUntilNext = nextScene
+    ? Math.max(0, nextScene.minLikes - totalLikes)
+    : 0;
 
   return (
     <div className="mt-4 rounded-lg border border-white/10 bg-black/15 p-4">
       <div className="mb-3 flex items-center justify-between gap-3 text-xs font-semibold text-white/65">
-        <span>현재 무드</span>
+        <span>AI 팔레트 #{sceneIndex + 1}</span>
         <span>{scene.label}</span>
       </div>
       <div
@@ -269,6 +347,16 @@ function PixelCreatorArt({ followers }: { followers: number }) {
             />
           )),
         )}
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-3 text-[11px] font-semibold text-white/45">
+        <span>
+          {nextScene
+            ? `다음 그림까지 ${formatNumber(likesUntilNext)} 좋아요`
+            : "모든 그림 해금"}
+        </span>
+        <span>
+          {sceneIndex + 1}/{pixelScenes.length}
+        </span>
       </div>
     </div>
   );
@@ -313,7 +401,7 @@ function UpgradeThumbnailBoard() {
 
 export function ClickButton() {
   const likesPerClick = useGameStore((state) => state.likesPerClick);
-  const followers = useGameStore((state) => state.followers);
+  const totalLikes = useGameStore((state) => state.totalLikes);
   const createPost = useGameStore((state) => state.createPost);
   const [bursts, setBursts] = useState<ClickBurst[]>([]);
   const [stamps, setStamps] = useState<ThumbnailStamp[]>([]);
@@ -398,7 +486,7 @@ export function ClickButton() {
       </motion.button>
 
       <UpgradeThumbnailBoard />
-      <PixelCreatorArt followers={followers} />
+      <PixelCreatorArt totalLikes={totalLikes} />
     </Card>
   );
 }
