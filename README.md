@@ -2,6 +2,36 @@
 
 한국어 기반 인플루언서 풍자 방치형 클리커 게임입니다.
 
+## Play
+
+Production build:
+
+```text
+https://influencer-clicker.vercel.app
+```
+
+Current core loop:
+
+```text
+썸네일 만들기
+→ 좋아요 증가
+→ 팔로워 증가
+→ 수익화
+→ 업그레이드로 더 많은 썸네일과 좋아요 생산
+```
+
+## Feedback
+
+초기 피드백에서는 아래를 중점적으로 확인합니다.
+
+- 모바일에서 한 손으로 플레이하기 편한가?
+- 숫자가 올라가는 감각이 충분한가?
+- 업그레이드를 샀을 때 변화가 보이는가?
+- 언제 지루해지는가?
+- 어떤 설명이 부족한가?
+
+피드백 모집은 공개 출시보다 작은 테스트 그룹에서 먼저 진행합니다.
+
 ## Tech Stack
 
 - Next.js App Router
@@ -85,6 +115,10 @@ npm run db:migrate:deploy
 ```
 
 4. 배포 도메인을 확인한 뒤 `AUTH_URL`을 운영 URL로 설정합니다.
-5. GitHub / Google OAuth 앱에 운영 콜백 URL을 등록합니다.
+5. Google / Kakao OAuth 앱에 운영 콜백 URL을 등록합니다.
 
 `postinstall`에서 `prisma generate`를 실행하므로 배포 환경에서도 Prisma Client가 생성됩니다.
+
+## Roadmap
+
+See [ROADMAP.md](./ROADMAP.md).
