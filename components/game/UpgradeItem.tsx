@@ -15,6 +15,8 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
   const buyUpgrade = useGameStore((state) => state.buyUpgrade);
   const cost = calculateUpgradeCost(upgrade.baseCost, level, upgrade.costMultiplier);
   const balance = upgrade.currency === "likes" ? likes : money;
+  const progressToMilestone = Math.min(100, ((level % 10) / 10) * 100);
+  const nextMilestone = Math.floor(level / 10) * 10 + 10;
   const effectLabel = {
     thumbnail: "클릭당 썸네일",
     thumbnailMultiplier: "클릭 썸네일 배율",
@@ -28,7 +30,7 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
 
   return (
     <div className="grid gap-3 rounded-lg border border-white/10 bg-black/15 p-3 sm:grid-cols-[auto_1fr_auto] sm:items-center">
-      <UpgradePixelArt upgradeId={upgrade.id} active={level > 0} />
+      <UpgradePixelArt upgradeId={upgrade.id} active={level > 0} level={level} />
       <div>
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="font-semibold">{upgrade.name}</h3>
@@ -40,6 +42,18 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
         <p className="mt-2 text-xs font-semibold text-pink-100">
           +{formatNumber(upgrade.effectValue)} {effectLabel}
         </p>
+        <div className="mt-3">
+          <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-white/45">
+            <span>강화 밀도</span>
+            <span>Lv. {nextMilestone}까지</span>
+          </div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-yellow-300 via-pink-400 to-cyan-300"
+              style={{ width: `${progressToMilestone}%` }}
+            />
+          </div>
+        </div>
       </div>
 
       <Button

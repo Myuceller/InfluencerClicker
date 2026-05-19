@@ -16,6 +16,113 @@ type ClickBurst = {
   y: number;
 };
 
+function ThumbnailPreview({
+  thumbnailVariant,
+}: {
+  thumbnailVariant: number;
+}) {
+  const upgradeLevels = useGameStore((state) => state.upgradeLevels);
+  const redArrowLevel = upgradeLevels["red-arrow"] ?? 0;
+  const yellowCircleLevel = upgradeLevels["yellow-circle"] ?? 0;
+  const copyLevel = upgradeLevels["clickbait-copy"] ?? 0;
+  const hookLevel = upgradeLevels["three-second-hook"] ?? 0;
+  const brandLevel = upgradeLevels["brand-deal"] ?? 0;
+  const dashboardLevel = upgradeLevels["viral-dashboard"] ?? 0;
+  const faceLevel = upgradeLevels["shocked-face"] ?? 0;
+  const intensity = Math.min(
+    1,
+    (redArrowLevel +
+      yellowCircleLevel +
+      copyLevel +
+      hookLevel +
+      brandLevel +
+      dashboardLevel +
+      faceLevel) /
+      18,
+  );
+
+  return (
+    <motion.div
+      key={thumbnailVariant}
+      initial={{ rotate: -4, scale: 0.92, y: 8 }}
+      animate={{ rotate: 0, scale: 1 + intensity * 0.03, y: 0 }}
+      transition={{ type: "spring", stiffness: 420, damping: 22 }}
+      className="relative mb-5 aspect-video w-48 rounded-lg border-4 border-slate-950 bg-white p-2 shadow-xl sm:w-56"
+    >
+      <div className="relative flex h-full items-center justify-between overflow-hidden rounded bg-gradient-to-br from-fuchsia-500 via-pink-400 to-yellow-300 p-3">
+        <div className="grid gap-2">
+          <span className="h-4 w-20 rounded bg-white" />
+          <span className="h-3 w-14 rounded bg-slate-950" />
+          <span className="h-3 w-24 rounded bg-white/80" />
+        </div>
+        <div
+          className="grid place-items-center rounded-full bg-white font-black text-pink-600"
+          style={{
+            width: `${64 + faceLevel * 3}px`,
+            height: `${64 + faceLevel * 3}px`,
+            fontSize: `${30 + faceLevel}px`,
+          }}
+        >
+          !
+        </div>
+
+        {redArrowLevel > 0 && (
+          <div
+            className="absolute right-8 top-8 h-4 bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.65)]"
+            style={{ width: `${46 + redArrowLevel * 5}px` }}
+          >
+            <span className="absolute -right-4 -top-2 size-0 border-y-[14px] border-l-[18px] border-y-transparent border-l-red-600" />
+          </div>
+        )}
+
+        {yellowCircleLevel > 0 && (
+          <div
+            className="absolute left-4 top-4 rounded-full border-[6px] border-yellow-300 bg-transparent"
+            style={{
+              width: `${50 + yellowCircleLevel * 4}px`,
+              height: `${50 + yellowCircleLevel * 4}px`,
+              boxShadow: "0 0 12px rgba(250, 204, 21, 0.65)",
+            }}
+          />
+        )}
+
+        {copyLevel > 0 && (
+          <div className="absolute bottom-2 left-2 right-2 border-2 border-slate-950 bg-white px-2 py-1 text-center text-xs font-black text-slate-950">
+            이걸 모르면 손해
+          </div>
+        )}
+
+        {hookLevel > 0 && (
+          <div className="absolute left-2 top-2 bg-slate-950 px-2 py-1 text-[10px] font-black text-yellow-300">
+            3초 후 공개
+          </div>
+        )}
+
+        {brandLevel > 0 && (
+          <div className="absolute right-2 bottom-2 rounded bg-emerald-300 px-2 py-1 text-[10px] font-black text-slate-950">
+            AD
+          </div>
+        )}
+
+        {dashboardLevel > 0 && (
+          <div className="absolute right-2 top-2 grid grid-cols-3 gap-0.5 rounded bg-black/70 p-1">
+            {Array.from({ length: 9 }).map((_, index) => (
+              <span
+                key={index}
+                className="size-1.5 bg-cyan-300"
+                style={{ opacity: 0.35 + ((index + dashboardLevel) % 5) * 0.13 }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+      <span className="absolute -right-3 -top-3 rounded bg-yellow-300 px-2 py-1 text-xs font-black text-slate-950 shadow">
+        NEW
+      </span>
+    </motion.div>
+  );
+}
+
 const pixelScenes = [
   {
     minFollowers: 0,
@@ -158,7 +265,11 @@ function UpgradeThumbnailBoard() {
               className="grid place-items-center rounded bg-white/5 p-1"
               title={upgrade.name}
             >
-              <UpgradePixelArt upgradeId={upgrade.id} />
+              <UpgradePixelArt
+                upgradeId={upgrade.id}
+                level={upgradeLevels[upgrade.id] ?? 0}
+                compact
+              />
             </div>
           ))
         )}
@@ -217,27 +328,7 @@ export function ClickButton() {
         className="relative flex min-h-72 w-full overflow-hidden flex-col items-center justify-center rounded-lg border border-white/20 bg-gradient-to-br from-white via-pink-100 to-fuchsia-200 text-slate-950 shadow-2xl shadow-pink-950/25 sm:min-h-80"
       >
         <div className="absolute inset-0 bg-[linear-gradient(120deg,_transparent_0%,_rgba(255,255,255,0.7)_45%,_transparent_62%)] opacity-40" />
-        <motion.div
-          key={thumbnailVariant}
-          initial={{ rotate: -4, scale: 0.92, y: 8 }}
-          animate={{ rotate: 0, scale: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 420, damping: 22 }}
-          className="relative mb-5 aspect-video w-48 rounded-lg border-4 border-slate-950 bg-white p-2 shadow-xl sm:w-56"
-        >
-          <div className="flex h-full items-center justify-between rounded bg-gradient-to-br from-fuchsia-500 via-pink-400 to-yellow-300 p-3">
-            <div className="grid gap-2">
-              <span className="h-4 w-20 rounded bg-white" />
-              <span className="h-3 w-14 rounded bg-slate-950" />
-              <span className="h-3 w-24 rounded bg-white/80" />
-            </div>
-            <div className="grid size-16 place-items-center rounded-full bg-white text-3xl font-black text-pink-600">
-              !
-            </div>
-          </div>
-          <span className="absolute -right-3 -top-3 rounded bg-yellow-300 px-2 py-1 text-xs font-black text-slate-950 shadow">
-            NEW
-          </span>
-        </motion.div>
+        <ThumbnailPreview thumbnailVariant={thumbnailVariant} />
         <ImagePlus size={44} className="relative" />
         <span className="relative mt-4 text-4xl font-black">썸네일 만들기</span>
         <span className="relative mt-2 inline-flex items-center gap-1 text-sm font-semibold text-slate-700">
