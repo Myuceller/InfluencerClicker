@@ -11,6 +11,28 @@ import { playUiBlip } from "@/features/game/utils/sound";
 import { useGameStore } from "@/features/game/store/useGameStore";
 import { UpgradePixelArt } from "./UpgradePixelArt";
 
+function formatUpgradeEffect(upgrade: Upgrade) {
+  if (
+    upgrade.effectType === "thumbnailMultiplier" ||
+    upgrade.effectType === "likesMultiplier" ||
+    upgrade.effectType === "moneyMultiplier"
+  ) {
+    return `${Math.round(upgrade.effectValue * 100)}%`;
+  }
+
+  if (
+    upgrade.effectType === "likesPerThumbnail" ||
+    upgrade.effectType === "moneyPerFollower"
+  ) {
+    return upgrade.effectValue.toLocaleString("en-US", {
+      maximumFractionDigits: 3,
+      minimumFractionDigits: upgrade.effectValue < 1 ? 2 : 0,
+    });
+  }
+
+  return formatNumber(upgrade.effectValue);
+}
+
 export function UpgradeItem({
   upgrade,
   locked = false,
@@ -97,7 +119,7 @@ export function UpgradeItem({
           <>
             <p className="mt-1 text-xs text-white/70 sm:text-sm">{upgrade.description}</p>
             <p className="mt-2 text-xs font-semibold text-pink-100">
-              +{formatNumber(upgrade.effectValue)} {effectLabel}
+              +{formatUpgradeEffect(upgrade)} {effectLabel}
             </p>
             <p className="mt-1 text-[11px] font-semibold text-white/45">
               구매마다 가격 x{upgrade.costMultiplier.toFixed(2)}
