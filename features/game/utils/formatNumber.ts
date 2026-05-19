@@ -8,6 +8,8 @@ export function formatNumber(value: number) {
   }
 
   const units = [
+    { value: 1_000_000_000_000_000_000, suffix: "Qi" },
+    { value: 1_000_000_000_000_000, suffix: "Qa" },
     { value: 1_000_000_000_000, suffix: "T" },
     { value: 1_000_000_000, suffix: "B" },
     { value: 1_000_000, suffix: "M" },
