@@ -86,7 +86,7 @@ export function UpgradeItem({
           : undefined
       }
       transition={{ duration: 0.35 }}
-      className="relative grid gap-2 rounded-lg border border-white/10 bg-black/15 p-2.5 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-3 sm:p-3"
+      className="relative grid gap-2 rounded-lg border border-white/10 bg-black/15 p-2 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-2.5"
     >
       {burstId > 0 && (
         <motion.span
@@ -94,7 +94,7 @@ export function UpgradeItem({
           initial={{ opacity: 0, y: 8, scale: 0.9 }}
           animate={{ opacity: [0, 1, 1, 0], y: -18, scale: 1 }}
           transition={{ duration: 0.65, ease: "easeOut" }}
-          className="pointer-events-none absolute right-4 top-2 rounded-full bg-yellow-300 px-2 py-1 text-xs font-black text-slate-950 shadow-lg"
+          className="pointer-events-none absolute right-3 top-2 rounded-full bg-yellow-300 px-2 py-1 text-xs font-black text-slate-950 shadow-lg"
         >
           Lv +1
         </motion.span>
@@ -106,7 +106,7 @@ export function UpgradeItem({
       />
       <div>
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="font-semibold">{locked ? "???" : upgrade.name}</h3>
+          <h3 className="text-sm font-semibold">{locked ? "???" : upgrade.name}</h3>
           <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/70">
             {locked
               ? "잠김"
@@ -118,12 +118,14 @@ export function UpgradeItem({
           </span>
         </div>
         {locked ? (
-          <p className="mt-1 text-xs text-white/55 sm:text-sm">
+          <p className="mt-1 text-xs text-white/55">
             이전 업그레이드를 1회 구매하면 공개됩니다.
           </p>
         ) : (
           <>
-            <p className="mt-1 text-xs text-white/70 sm:text-sm">{upgrade.description}</p>
+            <p className="mt-1 line-clamp-2 text-xs text-white/70">
+              {upgrade.description}
+            </p>
             <p className="mt-2 text-xs font-semibold text-pink-100">
               +{formatUpgradeEffect(upgrade)} {effectLabel}
             </p>
@@ -168,7 +170,7 @@ export function UpgradeItem({
         onClick={handleBuyUpgrade}
         disabled={!canBuy}
         variant={upgrade.currency === "likes" ? "likes" : "money"}
-        className="h-10 min-w-28 gap-2 px-3 sm:h-11 sm:min-w-32 sm:px-4"
+        className="h-9 w-full gap-2 px-3 text-sm sm:col-span-2"
       >
         {isMaxed ? (
           "완료"

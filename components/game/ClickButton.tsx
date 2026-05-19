@@ -62,7 +62,7 @@ function ThumbnailPreview({
       initial={{ rotate: -4, scale: 0.92, y: 8 }}
       animate={{ rotate: 0, scale: 1 + intensity * 0.03, y: 0 }}
       transition={{ type: "spring", stiffness: 420, damping: 22 }}
-      className="relative aspect-video w-full max-w-[18rem] rounded-lg border-4 border-slate-950 bg-white p-2 shadow-xl sm:max-w-[20rem]"
+      className="relative aspect-video w-full max-w-[20rem] rounded-lg border-4 border-slate-950 bg-white p-2 shadow-xl sm:max-w-[23rem]"
     >
       <div className="relative flex h-full items-center justify-between overflow-hidden rounded bg-gradient-to-br from-fuchsia-500 via-pink-400 to-yellow-300 p-3">
         <div className="grid gap-2">
@@ -325,21 +325,21 @@ function PixelCreatorArt({ totalLikes }: { totalLikes: number }) {
     : 0;
 
   return (
-    <div className="mt-4 rounded-lg border border-white/10 bg-black/15 p-4">
+    <div className="mt-4 rounded-lg border border-white/10 bg-black/15 p-5">
       <div className="mb-3 flex items-center justify-between gap-3 text-xs font-semibold text-white/65">
         <span>AI 팔레트 #{sceneIndex + 1}</span>
         <span>{scene.label}</span>
       </div>
       <div
         aria-hidden="true"
-        className="mx-auto grid w-fit gap-1"
+        className="mx-auto grid w-fit gap-1.5"
         style={{ gridTemplateColumns: "repeat(16, minmax(0, 1fr))" }}
       >
         {scene.rows.flatMap((row, rowIndex) =>
           row.split("").map((pixel, columnIndex) => (
             <span
               key={`${rowIndex}-${columnIndex}`}
-              className={`size-3 sm:size-4 ${
+              className={`size-4 sm:size-5 ${
                 pixel === "." ? "bg-transparent" : pixelColors[pixel]
               }`}
             />
@@ -398,7 +398,7 @@ export function ClickButton() {
   }
 
   return (
-    <Card className="overflow-hidden p-4">
+    <Card className="overflow-hidden p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-xs font-semibold uppercase text-white/60">
@@ -420,7 +420,7 @@ export function ClickButton() {
         }}
         onClick={handleCreatePost}
         onDoubleClick={(event) => event.preventDefault()}
-        className="relative mx-auto flex w-full max-w-sm touch-none select-none overflow-hidden flex-col items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-white via-pink-100 to-fuchsia-200 px-4 py-5 text-slate-950 shadow-2xl shadow-pink-950/25 [-webkit-touch-callout:none]"
+        className="relative mx-auto flex w-full max-w-md touch-none select-none overflow-hidden flex-col items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-white via-pink-100 to-fuchsia-200 px-4 py-6 text-slate-950 shadow-2xl shadow-pink-950/25 [-webkit-touch-callout:none]"
       >
         <div className="absolute inset-0 bg-[linear-gradient(120deg,_transparent_0%,_rgba(255,255,255,0.7)_45%,_transparent_62%)] opacity-40" />
         <ThumbnailPreview thumbnailVariant={thumbnailVariant} stamps={stamps} />

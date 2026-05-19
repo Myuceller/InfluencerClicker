@@ -73,7 +73,7 @@ export default function Home() {
               key="game"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]"
+              className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)]"
             >
               <div
                 className={`flex-col gap-4 ${

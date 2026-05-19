@@ -16,14 +16,14 @@ export function UpgradeShop() {
     .filter(({ index }) => isUpgradeVisible(index, upgradeLevels));
 
   return (
-    <Card className="p-3 sm:p-4">
-      <div className="mb-4">
+    <Card className="p-2.5 sm:p-3">
+      <div className="mb-3">
         <p className="text-xs font-semibold uppercase text-white/60">
           성장 장치
         </p>
-        <h2 className="text-xl font-bold">좋아요 성능 업그레이드</h2>
+        <h2 className="text-lg font-bold">좋아요 성능 업그레이드</h2>
       </div>
-      <div className="grid gap-2.5 sm:gap-3">
+      <div className="grid gap-2 lg:max-h-[calc(100vh-15rem)] lg:overflow-y-auto lg:pr-1">
         {visibleUpgrades.map(({ upgrade, index }) => (
           <UpgradeItem
             key={upgrade.id}
