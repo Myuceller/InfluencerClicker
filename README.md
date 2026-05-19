@@ -43,6 +43,12 @@ AUTH_KAKAO_SECRET=
 - `AUTH_SECRET`
   - 긴 랜덤 문자열을 사용합니다.
 
+로컬 환경변수 누락 여부는 값 출력 없이 키 이름만 검사합니다.
+
+```bash
+npm run env:check
+```
+
 ## OAuth Callback URLs
 
 로컬 개발:
