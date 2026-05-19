@@ -15,6 +15,7 @@ export type Upgrade = {
   description: string;
   baseCost: number;
   costMultiplier: number;
+  maxLevel?: number;
   effectType: UpgradeEffectType;
   effectValue: number;
   currency: "likes" | "money";

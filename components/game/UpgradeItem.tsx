@@ -46,7 +46,8 @@ export function UpgradeItem({
   const buyUpgrade = useGameStore((state) => state.buyUpgrade);
   const cost = calculateUpgradeCost(upgrade.baseCost, level, upgrade.costMultiplier);
   const balance = upgrade.currency === "likes" ? likes : money;
-  const canBuy = !locked && balance >= cost;
+  const isMaxed = Boolean(upgrade.maxLevel && level >= upgrade.maxLevel);
+  const canBuy = !locked && !isMaxed && balance >= cost;
   const [burstId, setBurstId] = useState(0);
   const progressToMilestone = Math.min(100, ((level % 10) / 10) * 100);
   const nextMilestone = Math.floor(level / 10) * 10 + 10;
@@ -61,7 +62,7 @@ export function UpgradeItem({
   }[upgrade.effectType];
 
   function handleBuyUpgrade() {
-    if (!canBuy || locked) {
+    if (!canBuy || locked || isMaxed) {
       return;
     }
 
@@ -107,7 +108,13 @@ export function UpgradeItem({
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="font-semibold">{locked ? "???" : upgrade.name}</h3>
           <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/70">
-            {locked ? "잠김" : `Lv. ${level}`}
+            {locked
+              ? "잠김"
+              : upgrade.maxLevel === 1
+                ? isMaxed
+                  ? "구매 완료"
+                  : "1회 한정"
+                : `Lv. ${level}`}
           </span>
         </div>
         {locked ? (
@@ -121,20 +128,31 @@ export function UpgradeItem({
               +{formatUpgradeEffect(upgrade)} {effectLabel}
             </p>
             <p className="mt-1 text-[11px] font-semibold text-white/45">
-              구매마다 가격 x{upgrade.costMultiplier.toFixed(2)}
+              {upgrade.maxLevel === 1
+                ? "돈으로 사는 1회성 효율 아이템"
+                : `구매마다 가격 x${upgrade.costMultiplier.toFixed(2)}`}
             </p>
-            <div className="mt-3">
-              <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-white/45">
-                <span>강화 밀도</span>
-                <span>Lv. {nextMilestone}까지</span>
-              </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+            {upgrade.maxLevel === 1 ? (
+              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-yellow-300 via-pink-400 to-cyan-300"
-                  style={{ width: `${progressToMilestone}%` }}
+                  className="h-full rounded-full bg-emerald-300"
+                  style={{ width: isMaxed ? "100%" : "0%" }}
                 />
               </div>
-            </div>
+            ) : (
+              <div className="mt-3">
+                <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-white/45">
+                  <span>강화 밀도</span>
+                  <span>Lv. {nextMilestone}까지</span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-yellow-300 via-pink-400 to-cyan-300"
+                    style={{ width: `${progressToMilestone}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </>
         )}
         {locked && (
@@ -152,7 +170,9 @@ export function UpgradeItem({
         variant={upgrade.currency === "likes" ? "likes" : "money"}
         className="h-10 min-w-28 gap-2 px-3 sm:h-11 sm:min-w-32 sm:px-4"
       >
-        {locked ? (
+        {isMaxed ? (
+          "완료"
+        ) : locked ? (
           "???"
         ) : (
           <>

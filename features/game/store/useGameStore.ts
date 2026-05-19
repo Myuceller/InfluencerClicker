@@ -142,6 +142,11 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
 
       const currentLevel = state.upgradeLevels[upgradeId] ?? 0;
+
+      if (upgrade.maxLevel && currentLevel >= upgrade.maxLevel) {
+        return state;
+      }
+
       const cost = calculateUpgradeCost(
         upgrade.baseCost,
         currentLevel,
