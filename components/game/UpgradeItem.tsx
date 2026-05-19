@@ -6,6 +6,7 @@ import type { Upgrade } from "@/features/game/types/game";
 import { calculateUpgradeCost } from "@/features/game/utils/calculate";
 import { formatNumber } from "@/features/game/utils/formatNumber";
 import { useGameStore } from "@/features/game/store/useGameStore";
+import { UpgradePixelArt } from "./UpgradePixelArt";
 
 export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
   const likes = useGameStore((state) => state.likes);
@@ -26,7 +27,8 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
   }[upgrade.effectType];
 
   return (
-    <div className="grid gap-3 rounded-lg border border-white/10 bg-black/15 p-3 sm:grid-cols-[1fr_auto] sm:items-center">
+    <div className="grid gap-3 rounded-lg border border-white/10 bg-black/15 p-3 sm:grid-cols-[auto_1fr_auto] sm:items-center">
+      <UpgradePixelArt upgradeId={upgrade.id} active={level > 0} />
       <div>
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="font-semibold">{upgrade.name}</h3>
