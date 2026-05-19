@@ -28,7 +28,7 @@ type GameState = PersistedGameState & {
   hydrate: () => void;
   createThumbnail: () => void;
   buyUpgrade: (upgradeId: string) => void;
-  tick: () => void;
+  tick: (deltaSeconds: number, shouldCheckNotification?: boolean) => void;
   mergeCloudState: () => Promise<void>;
   syncCloudState: () => Promise<void>;
 };
@@ -170,12 +170,17 @@ export const useGameStore = create<GameState>((set, get) => ({
       return nextState;
     });
   },
-  tick: () => {
+  tick: (deltaSeconds, shouldCheckNotification = false) => {
     set((state) => {
-      const shouldNotify = Math.random() > 0.7;
-      const thumbnails = state.thumbnails + state.thumbnailsPerSecond;
+      const safeDeltaSeconds = Math.min(Math.max(deltaSeconds, 0), 1);
+      const shouldNotify = shouldCheckNotification && Math.random() > 0.7;
+      const thumbnails =
+        state.thumbnails + state.thumbnailsPerSecond * safeDeltaSeconds;
       const likesGained =
-        thumbnails * state.likesPerThumbnail * state.likesMultiplier;
+        thumbnails *
+        state.likesPerThumbnail *
+        state.likesMultiplier *
+        safeDeltaSeconds;
       const totalLikes = state.totalLikes + likesGained;
       const followers = Math.floor(totalLikes / state.likesPerFollower);
       const moneyPerSecond =
@@ -186,10 +191,11 @@ export const useGameStore = create<GameState>((set, get) => ({
         likes: state.likes + likesGained,
         totalLikes,
         followers,
-        money: state.money + moneyPerSecond,
-        likesPerSecond: likesGained,
+        money: state.money + moneyPerSecond * safeDeltaSeconds,
+        likesPerSecond:
+          thumbnails * state.likesPerThumbnail * state.likesMultiplier,
         moneyPerSecond,
-        playTimeSeconds: state.playTimeSeconds + 1,
+        playTimeSeconds: state.playTimeSeconds + safeDeltaSeconds,
         notifications: shouldNotify
           ? [
               makeNotification(
@@ -236,7 +242,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 }));
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
-let unsubscribe: (() => void) | null = null;
+let saveIntervalId: ReturnType<typeof setInterval> | null = null;
+let notificationElapsedSeconds = 0;
 
 export function initializeGame() {
   if (typeof window === "undefined") {
@@ -246,18 +253,31 @@ export function initializeGame() {
   useGameStore.getState().hydrate();
 
   if (!intervalId) {
+    let lastTickAt = Date.now();
+
     intervalId = setInterval(() => {
       const state = useGameStore.getState();
-      state.tick();
-      saveGameState(toPersistedState(useGameStore.getState()));
-    }, 1000);
+      const now = Date.now();
+      const deltaSeconds = (now - lastTickAt) / 1000;
+      lastTickAt = now;
+      notificationElapsedSeconds += deltaSeconds;
+      const shouldCheckNotification = notificationElapsedSeconds >= 5;
+
+      if (shouldCheckNotification) {
+        notificationElapsedSeconds = 0;
+      }
+
+      state.tick(deltaSeconds, shouldCheckNotification);
+    }, 100);
   }
 
-  if (!unsubscribe) {
-    unsubscribe = useGameStore.subscribe((state) => {
+  if (!saveIntervalId) {
+    saveIntervalId = setInterval(() => {
+      const state = useGameStore.getState();
+
       if (state.hydrated) {
         saveGameState(toPersistedState(state));
       }
-    });
+    }, 2000);
   }
 }

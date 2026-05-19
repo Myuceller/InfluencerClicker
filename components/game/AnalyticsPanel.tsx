@@ -24,6 +24,7 @@ export function AnalyticsPanel() {
   const followerThreshold = Math.max(1, Math.floor(likesPerFollower));
   const likesUntilNextFollower =
     followerThreshold - (Math.floor(totalLikes) % followerThreshold);
+  const wholePlayTimeSeconds = Math.floor(playTimeSeconds);
 
   const rows = [
     ["총 클릭 수", formatNumber(totalClicks)],
@@ -38,7 +39,10 @@ export function AnalyticsPanel() {
     ["팔로워", formatNumber(followers)],
     ["수익 배율", `${formatNumber(moneyMultiplier)}x`],
     ["초당 수익", `${formatNumber(moneyPerSecond)}원`],
-    ["플레이 시간", `${Math.floor(playTimeSeconds / 60)}분 ${playTimeSeconds % 60}초`],
+    [
+      "플레이 시간",
+      `${Math.floor(wholePlayTimeSeconds / 60)}분 ${wholePlayTimeSeconds % 60}초`,
+    ],
   ];
 
   return (
