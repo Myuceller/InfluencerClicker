@@ -99,6 +99,9 @@ export function UpgradeItem({
             <p className="mt-2 text-xs font-semibold text-pink-100">
               +{formatNumber(upgrade.effectValue)} {effectLabel}
             </p>
+            <p className="mt-1 text-[11px] font-semibold text-white/45">
+              구매마다 가격 x{upgrade.costMultiplier.toFixed(2)}
+            </p>
             <div className="mt-3">
               <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-white/45">
                 <span>강화 밀도</span>
