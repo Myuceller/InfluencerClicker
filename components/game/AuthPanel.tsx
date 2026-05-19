@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Github, LogIn, LogOut, UserPlus } from "lucide-react";
+import { LogIn, LogOut, MessageCircle, UserPlus } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 
@@ -141,11 +141,11 @@ export function AuthPanel() {
         <Button
           type="button"
           variant="ghost"
-          onClick={() => signIn("github")}
+          onClick={() => signIn("kakao")}
           className="h-11 gap-2 px-4"
         >
-          <Github size={16} />
-          GitHub 로그인
+          <MessageCircle size={16} />
+          Kakao 로그인
         </Button>
         <Button
           type="button"

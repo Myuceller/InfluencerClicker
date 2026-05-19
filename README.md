@@ -31,10 +31,10 @@ npm run dev
 DATABASE_URL=
 AUTH_SECRET=
 AUTH_URL=
-AUTH_GITHUB_ID=
-AUTH_GITHUB_SECRET=
 AUTH_GOOGLE_ID=
 AUTH_GOOGLE_SECRET=
+AUTH_KAKAO_ID=
+AUTH_KAKAO_SECRET=
 ```
 
 - `AUTH_URL`
@@ -48,18 +48,18 @@ AUTH_GOOGLE_SECRET=
 로컬 개발:
 
 ```text
-http://localhost:3000/api/auth/callback/github
 http://localhost:3000/api/auth/callback/google
+http://localhost:3000/api/auth/callback/kakao
 ```
 
 운영 배포:
 
 ```text
-https://YOUR_DOMAIN/api/auth/callback/github
 https://YOUR_DOMAIN/api/auth/callback/google
+https://YOUR_DOMAIN/api/auth/callback/kakao
 ```
 
-GitHub와 Google OAuth 콘솔에는 로컬 URL과 운영 URL을 모두 등록합니다.
+Google과 Kakao OAuth 콘솔에는 로컬 URL과 운영 URL을 모두 등록합니다.
 
 ## Deployment
 

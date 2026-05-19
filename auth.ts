@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
+import Kakao from "next-auth/providers/kakao";
 import { prisma } from "@/lib/prisma";
 
 export const { handlers, auth } = NextAuth({
@@ -13,8 +13,8 @@ export const { handlers, auth } = NextAuth({
     signIn: "/",
   },
   providers: [
-    GitHub,
     Google,
+    Kakao,
     Credentials({
       credentials: {
         email: {},
