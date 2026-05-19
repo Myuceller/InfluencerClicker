@@ -40,16 +40,16 @@ export function ResourcePanel() {
   const state = useGameStore();
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
       {resources.map(({ key, label, hint, icon: Icon, accent }) => (
-        <Card key={key} className="p-3">
+        <Card key={key} className="p-2.5 sm:p-3">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-semibold uppercase text-white/60">
               {label}
             </span>
             <Icon className={accent} size={16} />
           </div>
-          <p className="mt-3 text-2xl font-bold">
+          <p className="mt-2 text-xl font-bold sm:mt-3 sm:text-2xl">
             {formatNumber(state[key])}
             {key === "money" ? "원" : ""}
           </p>

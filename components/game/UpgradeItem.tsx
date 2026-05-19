@@ -58,7 +58,7 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
           : undefined
       }
       transition={{ duration: 0.35 }}
-      className="relative grid gap-3 rounded-lg border border-white/10 bg-black/15 p-3 sm:grid-cols-[auto_1fr_auto] sm:items-center"
+      className="relative grid gap-2 rounded-lg border border-white/10 bg-black/15 p-2.5 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-3 sm:p-3"
     >
       {burstId > 0 && (
         <motion.span
@@ -79,7 +79,7 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
             Lv. {level}
           </span>
         </div>
-        <p className="mt-1 text-sm text-white/70">{upgrade.description}</p>
+        <p className="mt-1 text-xs text-white/70 sm:text-sm">{upgrade.description}</p>
         <p className="mt-2 text-xs font-semibold text-pink-100">
           +{formatNumber(upgrade.effectValue)} {effectLabel}
         </p>
@@ -100,7 +100,7 @@ export function UpgradeItem({ upgrade }: { upgrade: Upgrade }) {
       <Button
         onClick={handleBuyUpgrade}
         disabled={!canBuy}
-        className="h-11 min-w-32 gap-2 px-4"
+          className="h-10 min-w-28 gap-2 px-3 sm:h-11 sm:min-w-32 sm:px-4"
       >
         {formatNumber(cost)}
         {upgrade.currency === "money" ? "원" : ""}
