@@ -7,6 +7,7 @@ import { Card } from "@/components/common/Card";
 import { upgrades } from "@/features/game/data/upgrades";
 import { useGameStore } from "@/features/game/store/useGameStore";
 import { formatNumber } from "@/features/game/utils/formatNumber";
+import { playUiBlip } from "@/features/game/utils/sound";
 import { UpgradePixelArt } from "./UpgradePixelArt";
 
 type ClickBurst = {
@@ -287,6 +288,7 @@ export function ClickButton() {
 
   function handleCreateThumbnail(event: React.MouseEvent<HTMLButtonElement>) {
     createThumbnail();
+    playUiBlip("click");
 
     const rect = event.currentTarget.getBoundingClientRect();
     const burst = {
