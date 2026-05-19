@@ -39,10 +39,11 @@ model Account {
 model GameSave {
   id              String   @id @default(cuid())
   userId          String   @unique
+  thumbnails      Float    @default(0)
   likes           Float    @default(0)
+  totalLikes      Float    @default(0)
   followers       Float    @default(0)
-  dopamine        Float    @default(0)
-  clout           Float    @default(0)
+  money           Float    @default(0)
   totalClicks     Int      @default(0)
   upgradeLevels   Json
   achievements    Json

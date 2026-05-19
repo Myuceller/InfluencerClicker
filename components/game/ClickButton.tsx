@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Camera, TrendingUp } from "lucide-react";
+import { ImagePlus, TrendingUp } from "lucide-react";
 import { Card } from "@/components/common/Card";
 import { useGameStore } from "@/features/game/store/useGameStore";
 import { formatNumber } from "@/features/game/utils/formatNumber";
@@ -125,35 +125,35 @@ function PixelCreatorArt({ followers }: { followers: number }) {
 }
 
 export function ClickButton() {
-  const likesPerClick = useGameStore((state) => state.likesPerClick);
+  const thumbnailsPerClick = useGameStore((state) => state.thumbnailsPerClick);
   const followers = useGameStore((state) => state.followers);
-  const clickReel = useGameStore((state) => state.clickReel);
+  const createThumbnail = useGameStore((state) => state.createThumbnail);
 
   return (
     <Card className="overflow-hidden p-4">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-xs font-semibold uppercase text-white/60">
-            콘텐츠 스튜디오
+            썸네일 공장
           </p>
-          <h2 className="text-xl font-bold">유명해질 때까지 업로드</h2>
+          <h2 className="text-xl font-bold">멈출 수 없는 클릭 유도</h2>
         </div>
         <span className="rounded-full bg-black/20 px-3 py-1 text-sm font-semibold text-pink-100">
-          게시물당 +{formatNumber(likesPerClick)}
+          클릭당 썸네일 +{formatNumber(thumbnailsPerClick)}
         </span>
       </div>
 
       <motion.button
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.97 }}
-        onClick={clickReel}
+        onClick={createThumbnail}
         className="flex min-h-72 w-full flex-col items-center justify-center rounded-lg border border-white/20 bg-gradient-to-br from-white via-pink-100 to-fuchsia-200 text-slate-950 shadow-2xl shadow-pink-950/25 sm:min-h-80"
       >
-        <Camera size={52} />
-        <span className="mt-4 text-4xl font-black">릴 업로드</span>
+        <ImagePlus size={52} />
+        <span className="mt-4 text-4xl font-black">썸네일 만들기</span>
         <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-slate-700">
           <TrendingUp size={16} />
-          알고리즘의 선택을 기다리는 중
+          클릭하고 싶은 표정 제작 중
         </span>
       </motion.button>
 

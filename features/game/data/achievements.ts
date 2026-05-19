@@ -2,10 +2,16 @@ import type { Achievement } from "../types/game";
 
 export const achievements: Achievement[] = [
   {
-    id: "first-post",
-    name: "첫 게시물",
-    description: "릴 하나를 올리고 쇼를 시작하세요.",
+    id: "first-thumbnail",
+    name: "첫 썸네일",
+    description: "썸네일 하나를 만들고 쇼를 시작하세요.",
     condition: { metric: "totalClicks", threshold: 1 },
+  },
+  {
+    id: "thumbnail-machine",
+    name: "썸네일 기계",
+    description: "썸네일 100개를 생산하세요.",
+    condition: { metric: "thumbnails", threshold: 100 },
   },
   {
     id: "micro-famous",
@@ -20,8 +26,14 @@ export const achievements: Achievement[] = [
     condition: { metric: "likes", threshold: 500 },
   },
   {
-    id: "always-online",
-    name: "항상 접속 중",
+    id: "ad-money",
+    name: "첫 수익화",
+    description: "수익 100원을 모으세요.",
+    condition: { metric: "money", threshold: 100 },
+  },
+  {
+    id: "always-clickable",
+    name: "누르면 터짐",
     description: "초당 좋아요 10개를 달성하세요.",
     condition: { metric: "likesPerSecond", threshold: 10 },
   },

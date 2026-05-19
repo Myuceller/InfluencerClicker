@@ -14,11 +14,15 @@ import { loadGameState, saveGameState } from "../utils/storage";
 
 type GameState = PersistedGameState & {
   hydrated: boolean;
-  likesPerClick: number;
+  thumbnailsPerClick: number;
+  likesPerThumbnail: number;
   likesPerSecond: number;
+  likesPerFollower: number;
+  moneyPerFollower: number;
+  moneyPerSecond: number;
   notifications: Notification[];
   hydrate: () => void;
-  clickReel: () => void;
+  createThumbnail: () => void;
   buyUpgrade: (upgradeId: string) => void;
   tick: () => void;
   mergeCloudState: () => Promise<void>;
@@ -26,10 +30,11 @@ type GameState = PersistedGameState & {
 };
 
 const initialPersistedState: PersistedGameState = {
+  thumbnails: 0,
   likes: 0,
+  totalLikes: 0,
   followers: 0,
-  dopamine: 0,
-  clout: 0,
+  money: 0,
   totalClicks: 0,
   upgradeLevels: {},
   achievements: [],
@@ -44,10 +49,11 @@ function getUnlockedAchievements(state: GameState) {
 
 function toPersistedState(state: GameState): PersistedGameState {
   return {
+    thumbnails: state.thumbnails,
     likes: state.likes,
+    totalLikes: state.totalLikes,
     followers: state.followers,
-    dopamine: state.dopamine,
-    clout: state.clout,
+    money: state.money,
     totalClicks: state.totalClicks,
     upgradeLevels: state.upgradeLevels,
     achievements: state.achievements,
@@ -62,33 +68,50 @@ function makeNotification(message: string): Notification {
   };
 }
 
+function getComputedState(
+  state: PersistedGameState,
+  derived: ReturnType<typeof calculateDerivedStats>,
+) {
+  const followers = Math.floor(state.totalLikes / derived.likesPerFollower);
+
+  return {
+    ...derived,
+    followers,
+    likesPerSecond: state.thumbnails * derived.likesPerThumbnail,
+    moneyPerSecond: followers * derived.moneyPerFollower,
+  };
+}
+
 export const useGameStore = create<GameState>((set, get) => ({
   ...initialPersistedState,
-  ...calculateDerivedStats(initialPersistedState.upgradeLevels),
+  ...getComputedState(
+    initialPersistedState,
+    calculateDerivedStats(initialPersistedState.upgradeLevels),
+  ),
   hydrated: false,
   notifications: [
-    makeNotification("돌아오셨군요, 크리에이터님. 시청자는 오늘도 세로 영상을 원합니다."),
+    makeNotification("돌아오셨군요, 크리에이터님. 오늘은 썸네일이 콘텐츠보다 중요합니다."),
   ],
   hydrate: () => {
     const saved = loadGameState();
-    const merged = { ...initialPersistedState, ...saved };
+    const merged = {
+      ...initialPersistedState,
+      ...saved,
+      totalLikes: saved?.totalLikes ?? saved?.likes ?? 0,
+    };
     const derived = calculateDerivedStats(merged.upgradeLevels);
 
     set({
       ...merged,
-      ...derived,
+      ...getComputedState(merged, derived),
       hydrated: true,
     });
   },
-  clickReel: () => {
+  createThumbnail: () => {
     set((state) => {
-      const nextLikes = state.likes + state.likesPerClick;
       const nextState = {
         ...state,
-        likes: nextLikes,
-        followers: state.followers + Math.max(1, Math.floor(state.likesPerClick / 2)),
-        dopamine: state.dopamine + 1,
-        clout: state.clout + Math.max(1, Math.floor(state.likesPerClick / 3)),
+        thumbnails: state.thumbnails + state.thumbnailsPerClick,
         totalClicks: state.totalClicks + 1,
       };
       nextState.achievements = getUnlockedAchievements(nextState);
@@ -111,7 +134,11 @@ export const useGameStore = create<GameState>((set, get) => ({
         upgrade.costMultiplier,
       );
 
-      if (state.likes < cost) {
+      if (upgrade.currency === "likes" && state.likes < cost) {
+        return state;
+      }
+
+      if (upgrade.currency === "money" && state.money < cost) {
         return state;
       }
 
@@ -120,11 +147,15 @@ export const useGameStore = create<GameState>((set, get) => ({
         [upgradeId]: currentLevel + 1,
       };
       const derived = calculateDerivedStats(upgradeLevels);
-      const nextState = {
+      const persistedNextState = {
         ...state,
-        likes: state.likes - cost,
+        likes: upgrade.currency === "likes" ? state.likes - cost : state.likes,
+        money: upgrade.currency === "money" ? state.money - cost : state.money,
         upgradeLevels,
-        ...derived,
+      };
+      const nextState = {
+        ...persistedNextState,
+        ...getComputedState(persistedNextState, derived),
       };
       nextState.achievements = getUnlockedAchievements(nextState);
 
@@ -134,12 +165,18 @@ export const useGameStore = create<GameState>((set, get) => ({
   tick: () => {
     set((state) => {
       const shouldNotify = Math.random() > 0.7;
+      const likesGained = state.thumbnails * state.likesPerThumbnail;
+      const totalLikes = state.totalLikes + likesGained;
+      const followers = Math.floor(totalLikes / state.likesPerFollower);
+      const moneyPerSecond = followers * state.moneyPerFollower;
       const nextState = {
         ...state,
-        likes: state.likes + state.likesPerSecond,
-        followers: state.followers + Math.floor(state.likesPerSecond / 2),
-        dopamine: state.dopamine + (state.likesPerSecond > 0 ? 1 : 0),
-        clout: state.clout + Math.floor(state.likesPerSecond / 3),
+        likes: state.likes + likesGained,
+        totalLikes,
+        followers,
+        money: state.money + moneyPerSecond,
+        likesPerSecond: likesGained,
+        moneyPerSecond,
         playTimeSeconds: state.playTimeSeconds + 1,
         notifications: shouldNotify
           ? [
@@ -174,7 +211,10 @@ export const useGameStore = create<GameState>((set, get) => ({
       return {
         ...state,
         ...cloudState,
-        ...calculateDerivedStats(cloudState.upgradeLevels),
+        ...getComputedState(
+          cloudState,
+          calculateDerivedStats(cloudState.upgradeLevels),
+        ),
       };
     });
   },

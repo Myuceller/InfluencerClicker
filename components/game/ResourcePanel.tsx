@@ -1,15 +1,15 @@
 "use client";
 
-import { Heart, Sparkles, Users, Zap } from "lucide-react";
+import { Heart, ImageIcon, Users, Wallet } from "lucide-react";
 import { Card } from "@/components/common/Card";
 import { formatNumber } from "@/features/game/utils/formatNumber";
 import { useGameStore } from "@/features/game/store/useGameStore";
 
 const resources = [
+  { key: "thumbnails", label: "썸네일", icon: ImageIcon, accent: "text-yellow-200" },
   { key: "likes", label: "좋아요", icon: Heart, accent: "text-pink-200" },
   { key: "followers", label: "팔로워", icon: Users, accent: "text-cyan-200" },
-  { key: "dopamine", label: "도파민", icon: Zap, accent: "text-yellow-200" },
-  { key: "clout", label: "영향력", icon: Sparkles, accent: "text-fuchsia-200" },
+  { key: "money", label: "수익", icon: Wallet, accent: "text-emerald-200" },
 ] as const;
 
 export function ResourcePanel() {

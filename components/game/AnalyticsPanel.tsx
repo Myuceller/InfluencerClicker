@@ -8,17 +8,21 @@ import { formatNumber } from "@/features/game/utils/formatNumber";
 export function AnalyticsPanel() {
   const {
     totalClicks,
-    likesPerClick,
+    thumbnailsPerClick,
+    likesPerThumbnail,
     likesPerSecond,
     followers,
+    moneyPerSecond,
     playTimeSeconds,
   } = useGameStore();
 
   const rows = [
     ["총 클릭 수", formatNumber(totalClicks)],
-    ["클릭당 좋아요", formatNumber(likesPerClick)],
+    ["클릭당 썸네일", formatNumber(thumbnailsPerClick)],
+    ["썸네일당 좋아요", formatNumber(likesPerThumbnail)],
     ["초당 좋아요", formatNumber(likesPerSecond)],
     ["팔로워", formatNumber(followers)],
+    ["초당 수익", `${formatNumber(moneyPerSecond)}원`],
     ["플레이 시간", `${Math.floor(playTimeSeconds / 60)}분 ${playTimeSeconds % 60}초`],
   ];
 
