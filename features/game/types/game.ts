@@ -1,6 +1,14 @@
-export type ResourceKey = "likes" | "followers" | "dopamine" | "clout";
+export type ResourceKey = "thumbnails" | "likes" | "followers" | "money";
 
-export type UpgradeEffectType = "click" | "passive";
+export type UpgradeEffectType =
+  | "thumbnail"
+  | "thumbnailMultiplier"
+  | "autoThumbnail"
+  | "likesPerThumbnail"
+  | "likesMultiplier"
+  | "followerConversion"
+  | "moneyPerFollower"
+  | "moneyMultiplier";
 
 export type Upgrade = {
   id: string;
@@ -10,6 +18,7 @@ export type Upgrade = {
   costMultiplier: number;
   effectType: UpgradeEffectType;
   effectValue: number;
+  currency: "likes" | "money";
 };
 
 export type Achievement = {
@@ -17,7 +26,13 @@ export type Achievement = {
   name: string;
   description: string;
   condition: {
-    metric: "totalClicks" | "likes" | "followers" | "likesPerSecond";
+    metric:
+      | "totalClicks"
+      | "thumbnails"
+      | "likes"
+      | "followers"
+      | "money"
+      | "likesPerSecond";
     threshold: number;
   };
 };
@@ -28,10 +43,11 @@ export type Notification = {
 };
 
 export type PersistedGameState = {
+  thumbnails: number;
   likes: number;
+  totalLikes: number;
   followers: number;
-  dopamine: number;
-  clout: number;
+  money: number;
   totalClicks: number;
   upgradeLevels: Record<string, number>;
   achievements: string[];

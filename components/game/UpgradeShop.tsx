@@ -9,9 +9,9 @@ export function UpgradeShop() {
     <Card className="p-4">
       <div className="mb-4">
         <p className="text-xs font-semibold uppercase text-white/60">
-          수익화 퍼널
+          성장 장치
         </p>
-        <h2 className="text-xl font-bold">업그레이드 상점</h2>
+        <h2 className="text-xl font-bold">썸네일 성능 업그레이드</h2>
       </div>
       <div className="grid gap-3">
         {upgrades.map((upgrade) => (

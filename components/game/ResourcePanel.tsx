@@ -1,15 +1,39 @@
 "use client";
 
-import { Heart, Sparkles, Users, Zap } from "lucide-react";
+import { Heart, ImageIcon, Users, Wallet } from "lucide-react";
 import { Card } from "@/components/common/Card";
 import { formatNumber } from "@/features/game/utils/formatNumber";
 import { useGameStore } from "@/features/game/store/useGameStore";
 
 const resources = [
-  { key: "likes", label: "좋아요", icon: Heart, accent: "text-pink-200" },
-  { key: "followers", label: "팔로워", icon: Users, accent: "text-cyan-200" },
-  { key: "dopamine", label: "도파민", icon: Zap, accent: "text-yellow-200" },
-  { key: "clout", label: "영향력", icon: Sparkles, accent: "text-fuchsia-200" },
+  {
+    key: "thumbnails",
+    label: "썸네일",
+    hint: "클릭으로 만드는 원천",
+    icon: ImageIcon,
+    accent: "text-yellow-200",
+  },
+  {
+    key: "likes",
+    label: "좋아요",
+    hint: "업그레이드 재화",
+    icon: Heart,
+    accent: "text-pink-200",
+  },
+  {
+    key: "followers",
+    label: "팔로워",
+    hint: "누적 좋아요로 증가",
+    icon: Users,
+    accent: "text-cyan-200",
+  },
+  {
+    key: "money",
+    label: "수익",
+    hint: "협찬 업그레이드 재화",
+    icon: Wallet,
+    accent: "text-emerald-200",
+  },
 ] as const;
 
 export function ResourcePanel() {
@@ -17,7 +41,7 @@ export function ResourcePanel() {
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {resources.map(({ key, label, icon: Icon, accent }) => (
+      {resources.map(({ key, label, hint, icon: Icon, accent }) => (
         <Card key={key} className="p-3">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-semibold uppercase text-white/60">
@@ -25,7 +49,11 @@ export function ResourcePanel() {
             </span>
             <Icon className={accent} size={16} />
           </div>
-          <p className="mt-3 text-2xl font-bold">{formatNumber(state[key])}</p>
+          <p className="mt-3 text-2xl font-bold">
+            {formatNumber(state[key])}
+            {key === "money" ? "원" : ""}
+          </p>
+          <p className="mt-1 text-xs text-white/45">{hint}</p>
         </Card>
       ))}
     </div>
