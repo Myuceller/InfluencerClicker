@@ -1,22 +1,15 @@
 "use client";
 
-import { Heart, ImageIcon, Users, Wallet } from "lucide-react";
+import { Heart, Users, Wallet } from "lucide-react";
 import { Card } from "@/components/common/Card";
 import { formatNumber } from "@/features/game/utils/formatNumber";
 import { useGameStore } from "@/features/game/store/useGameStore";
 
 const resources = [
   {
-    key: "thumbnails",
-    label: "썸네일",
-    hint: "클릭으로 만드는 원천",
-    icon: ImageIcon,
-    accent: "text-yellow-200",
-  },
-  {
     key: "likes",
     label: "좋아요",
-    hint: "업그레이드 재화",
+    hint: "메인 업그레이드 재화",
     icon: Heart,
     accent: "text-pink-200",
   },
@@ -30,7 +23,7 @@ const resources = [
   {
     key: "money",
     label: "수익",
-    hint: "협찬 업그레이드 재화",
+    hint: "후반 업그레이드 재화",
     icon: Wallet,
     accent: "text-emerald-200",
   },
@@ -40,7 +33,7 @@ export function ResourcePanel() {
   const state = useGameStore();
 
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+    <div className="grid grid-cols-3 gap-2 sm:gap-3">
       {resources.map(({ key, label, hint, icon: Icon, accent }) => (
         <Card key={key} className="p-2.5 sm:p-3">
           <div className="flex items-center justify-between gap-2">

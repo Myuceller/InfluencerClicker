@@ -23,6 +23,14 @@ type ThumbnailStamp = {
   color: string;
 };
 
+function formatClickGain(value: number) {
+  if (value < 10 && !Number.isInteger(value)) {
+    return value.toLocaleString("en-US", { maximumFractionDigits: 1 });
+  }
+
+  return formatNumber(value);
+}
+
 function ThumbnailPreview({
   thumbnailVariant,
   stamps,
@@ -275,7 +283,7 @@ function UpgradeThumbnailBoard() {
   return (
     <div className="mt-4 rounded-lg border border-white/10 bg-black/15 p-4">
       <div className="mb-3 flex items-center justify-between gap-3 text-xs font-semibold text-white/65">
-        <span>썸네일에 붙은 장식</span>
+        <span>콘텐츠에 붙은 장식</span>
         <span>{ownedUpgrades.length}개 활성화</span>
       </div>
       <div className="grid min-h-20 grid-cols-6 gap-2 sm:grid-cols-9">
@@ -304,21 +312,21 @@ function UpgradeThumbnailBoard() {
 }
 
 export function ClickButton() {
-  const thumbnailsPerClick = useGameStore((state) => state.thumbnailsPerClick);
+  const likesPerClick = useGameStore((state) => state.likesPerClick);
   const followers = useGameStore((state) => state.followers);
-  const createThumbnail = useGameStore((state) => state.createThumbnail);
+  const createPost = useGameStore((state) => state.createPost);
   const [bursts, setBursts] = useState<ClickBurst[]>([]);
   const [stamps, setStamps] = useState<ThumbnailStamp[]>([]);
   const [thumbnailVariant, setThumbnailVariant] = useState(0);
 
-  function handleCreateThumbnail(event: React.MouseEvent<HTMLButtonElement>) {
-    createThumbnail();
+  function handleCreatePost(event: React.MouseEvent<HTMLButtonElement>) {
+    createPost();
     playUiBlip("click");
 
     const rect = event.currentTarget.getBoundingClientRect();
     const burst = {
       id: Date.now() + Math.random(),
-      value: thumbnailsPerClick,
+      value: likesPerClick,
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
@@ -345,12 +353,12 @@ export function ClickButton() {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-xs font-semibold uppercase text-white/60">
-            썸네일 공장
+            좋아요 공장
           </p>
           <h2 className="text-xl font-bold">멈출 수 없는 클릭 유도</h2>
         </div>
         <span className="rounded-full bg-black/20 px-3 py-1 text-sm font-semibold text-pink-100">
-          클릭당 썸네일 +{formatNumber(thumbnailsPerClick)}
+          클릭당 좋아요 +{formatClickGain(likesPerClick)}
         </span>
       </div>
 
@@ -361,14 +369,14 @@ export function ClickButton() {
           y: 3,
           boxShadow: "0 12px 28px rgba(112, 26, 117, 0.25)",
         }}
-        onClick={handleCreateThumbnail}
+        onClick={handleCreatePost}
         onDoubleClick={(event) => event.preventDefault()}
         className="relative mx-auto flex w-full max-w-sm touch-none select-none overflow-hidden flex-col items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-white via-pink-100 to-fuchsia-200 px-4 py-5 text-slate-950 shadow-2xl shadow-pink-950/25 [-webkit-touch-callout:none]"
       >
         <div className="absolute inset-0 bg-[linear-gradient(120deg,_transparent_0%,_rgba(255,255,255,0.7)_45%,_transparent_62%)] opacity-40" />
         <ThumbnailPreview thumbnailVariant={thumbnailVariant} stamps={stamps} />
         <span className="relative mt-4 rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-yellow-200 shadow-lg">
-          탭해서 +{formatNumber(thumbnailsPerClick)}
+          탭해서 +{formatClickGain(likesPerClick)} 좋아요
         </span>
 
         {bursts.map((burst) => (
@@ -384,7 +392,7 @@ export function ClickButton() {
               transform: "translate(-50%, -50%)",
             }}
           >
-            +{formatNumber(burst.value)} 썸네일
+            +{formatClickGain(burst.value)} 좋아요
           </motion.span>
         ))}
       </motion.button>

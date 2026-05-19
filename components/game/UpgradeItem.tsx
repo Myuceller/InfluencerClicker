@@ -13,7 +13,7 @@ import { UpgradePixelArt } from "./UpgradePixelArt";
 
 function formatUpgradeEffect(upgrade: Upgrade) {
   if (
-    upgrade.effectType === "thumbnailMultiplier" ||
+    upgrade.effectType === "clickMultiplier" ||
     upgrade.effectType === "likesMultiplier" ||
     upgrade.effectType === "moneyMultiplier"
   ) {
@@ -21,7 +21,7 @@ function formatUpgradeEffect(upgrade: Upgrade) {
   }
 
   if (
-    upgrade.effectType === "likesPerThumbnail" ||
+    upgrade.effectType === "likesPerClick" ||
     upgrade.effectType === "moneyPerFollower"
   ) {
     return upgrade.effectValue.toLocaleString("en-US", {
@@ -51,10 +51,9 @@ export function UpgradeItem({
   const progressToMilestone = Math.min(100, ((level % 10) / 10) * 100);
   const nextMilestone = Math.floor(level / 10) * 10 + 10;
   const effectLabel = {
-    thumbnail: "클릭당 썸네일",
-    thumbnailMultiplier: "클릭 썸네일 배율",
-    autoThumbnail: "초당 자동 썸네일",
-    likesPerThumbnail: "썸네일당 좋아요",
+    likesPerClick: "클릭당 좋아요",
+    clickMultiplier: "클릭 좋아요 배율",
+    autoLikes: "초당 자동 좋아요",
     likesMultiplier: "좋아요 배율",
     followerConversion: "팔로워 전환 효율",
     moneyPerFollower: "팔로워당 수익",

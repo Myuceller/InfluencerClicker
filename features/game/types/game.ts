@@ -1,10 +1,9 @@
-export type ResourceKey = "thumbnails" | "likes" | "followers" | "money";
+export type ResourceKey = "likes" | "followers" | "money";
 
 export type UpgradeEffectType =
-  | "thumbnail"
-  | "thumbnailMultiplier"
-  | "autoThumbnail"
-  | "likesPerThumbnail"
+  | "likesPerClick"
+  | "clickMultiplier"
+  | "autoLikes"
   | "likesMultiplier"
   | "followerConversion"
   | "moneyPerFollower"
@@ -28,7 +27,7 @@ export type Achievement = {
   condition: {
     metric:
       | "totalClicks"
-      | "thumbnails"
+      | "totalLikes"
       | "likes"
       | "followers"
       | "money"
@@ -43,7 +42,6 @@ export type Notification = {
 };
 
 export type PersistedGameState = {
-  thumbnails: number;
   likes: number;
   totalLikes: number;
   followers: number;

@@ -14,7 +14,6 @@ function toPersistedState(save: {
   playTimeSeconds: number;
 }): PersistedGameState {
   return {
-    thumbnails: save.thumbnails,
     likes: save.likes,
     totalLikes: save.totalLikes,
     followers: save.followers,
@@ -56,7 +55,7 @@ export async function PUT(request: Request) {
   const save = await prisma.gameSave.upsert({
     where: { userId },
     update: {
-      thumbnails: body.thumbnails,
+      thumbnails: 0,
       likes: body.likes,
       totalLikes: body.totalLikes,
       followers: body.followers,
@@ -68,7 +67,7 @@ export async function PUT(request: Request) {
     },
     create: {
       userId,
-      thumbnails: body.thumbnails,
+      thumbnails: 0,
       likes: body.likes,
       totalLikes: body.totalLikes,
       followers: body.followers,

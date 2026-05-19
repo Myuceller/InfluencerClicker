@@ -14,20 +14,16 @@ export function calculateDerivedStats(upgradeLevels: Record<string, number>) {
       const level = upgradeLevels[upgrade.id] ?? 0;
       const bonus = level * upgrade.effectValue;
 
-      if (upgrade.effectType === "thumbnail") {
-        totals.thumbnailsPerClick += bonus;
+      if (upgrade.effectType === "likesPerClick") {
+        totals.likesPerClick += bonus;
       }
 
-      if (upgrade.effectType === "thumbnailMultiplier") {
-        totals.thumbnailMultiplier += bonus;
+      if (upgrade.effectType === "clickMultiplier") {
+        totals.clickMultiplier += bonus;
       }
 
-      if (upgrade.effectType === "autoThumbnail") {
-        totals.thumbnailsPerSecond += bonus;
-      }
-
-      if (upgrade.effectType === "likesPerThumbnail") {
-        totals.likesPerThumbnail += bonus;
+      if (upgrade.effectType === "autoLikes") {
+        totals.autoLikesPerSecond += bonus;
       }
 
       if (upgrade.effectType === "likesMultiplier") {
@@ -49,10 +45,9 @@ export function calculateDerivedStats(upgradeLevels: Record<string, number>) {
       return totals;
     },
     {
-      thumbnailsPerClick: 1,
-      thumbnailMultiplier: 1,
-      thumbnailsPerSecond: 0,
-      likesPerThumbnail: 0.1,
+      likesPerClick: 1,
+      clickMultiplier: 1,
+      autoLikesPerSecond: 0,
       likesMultiplier: 1,
       likesPerFollower: 100,
       moneyPerFollower: 0,

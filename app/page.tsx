@@ -47,7 +47,7 @@ export default function Home() {
             </h1>
           </div>
           <p className="max-w-md text-sm text-white/75">
-            썸네일을 만들고, 좋아요를 모으고, 팔로워를 수익으로 바꿔보세요.
+            좋아요를 모으고, 팔로워를 키우고, 수익 업그레이드까지 밀어보세요.
           </p>
         </header>
 

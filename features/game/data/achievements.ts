@@ -2,16 +2,16 @@ import type { Achievement } from "../types/game";
 
 export const achievements: Achievement[] = [
   {
-    id: "first-thumbnail",
-    name: "첫 썸네일",
-    description: "썸네일 하나를 만들고 쇼를 시작하세요.",
+    id: "first-like",
+    name: "첫 좋아요",
+    description: "처음으로 좋아요를 받고 쇼를 시작하세요.",
     condition: { metric: "totalClicks", threshold: 1 },
   },
   {
-    id: "thumbnail-machine",
-    name: "썸네일 기계",
-    description: "썸네일 100개를 생산하세요.",
-    condition: { metric: "thumbnails", threshold: 100 },
+    id: "like-machine",
+    name: "좋아요 기계",
+    description: "좋아요 100개를 모으세요.",
+    condition: { metric: "totalLikes", threshold: 100 },
   },
   {
     id: "micro-famous",
@@ -23,7 +23,7 @@ export const achievements: Achievement[] = [
     id: "engagement-farmer",
     name: "반응 농부",
     description: "좋아요 500개를 모으세요.",
-    condition: { metric: "likes", threshold: 500 },
+    condition: { metric: "totalLikes", threshold: 500 },
   },
   {
     id: "ad-money",

@@ -15,10 +15,9 @@ import { isUpgradeRevealed } from "../utils/upgradeUnlocks";
 
 type GameState = PersistedGameState & {
   hydrated: boolean;
-  thumbnailsPerClick: number;
-  thumbnailMultiplier: number;
-  thumbnailsPerSecond: number;
-  likesPerThumbnail: number;
+  likesPerClick: number;
+  clickMultiplier: number;
+  autoLikesPerSecond: number;
   likesMultiplier: number;
   likesPerSecond: number;
   likesPerFollower: number;
@@ -27,7 +26,7 @@ type GameState = PersistedGameState & {
   moneyPerSecond: number;
   notifications: Notification[];
   hydrate: () => void;
-  createThumbnail: () => void;
+  createPost: () => void;
   buyUpgrade: (upgradeId: string) => void;
   tick: (deltaSeconds: number, shouldCheckNotification?: boolean) => void;
   mergeCloudState: () => Promise<void>;
@@ -35,7 +34,6 @@ type GameState = PersistedGameState & {
 };
 
 const initialPersistedState: PersistedGameState = {
-  thumbnails: 0,
   likes: 0,
   totalLikes: 0,
   followers: 0,
@@ -54,7 +52,6 @@ function getUnlockedAchievements(state: GameState) {
 
 function toPersistedState(state: GameState): PersistedGameState {
   return {
-    thumbnails: state.thumbnails,
     likes: state.likes,
     totalLikes: state.totalLikes,
     followers: state.followers,
@@ -82,10 +79,9 @@ function getComputedState(
   return {
     ...derived,
     followers,
-    thumbnailsPerClick:
-      derived.thumbnailsPerClick * derived.thumbnailMultiplier,
-    likesPerSecond:
-      state.thumbnails * derived.likesPerThumbnail * derived.likesMultiplier,
+    likesPerClick:
+      derived.likesPerClick * derived.clickMultiplier * derived.likesMultiplier,
+    likesPerSecond: derived.autoLikesPerSecond * derived.likesMultiplier,
     moneyPerSecond:
       followers * derived.moneyPerFollower * derived.moneyMultiplier,
   };
@@ -99,7 +95,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   ),
   hydrated: false,
   notifications: [
-    makeNotification("돌아오셨군요, 크리에이터님. 오늘은 썸네일이 콘텐츠보다 중요합니다."),
+    makeNotification("돌아오셨군요, 크리에이터님. 오늘도 알고리즘은 굶주렸습니다."),
   ],
   hydrate: () => {
     const saved = loadGameState();
@@ -116,11 +112,15 @@ export const useGameStore = create<GameState>((set, get) => ({
       hydrated: true,
     });
   },
-  createThumbnail: () => {
+  createPost: () => {
     set((state) => {
+      const likesGained = state.likesPerClick;
+      const totalLikes = state.totalLikes + likesGained;
       const nextState = {
         ...state,
-        thumbnails: state.thumbnails + state.thumbnailsPerClick,
+        likes: state.likes + likesGained,
+        totalLikes,
+        followers: Math.floor(totalLikes / state.likesPerFollower),
         totalClicks: state.totalClicks + 1,
       };
       nextState.achievements = getUnlockedAchievements(nextState);
@@ -180,26 +180,19 @@ export const useGameStore = create<GameState>((set, get) => ({
     set((state) => {
       const safeDeltaSeconds = Math.min(Math.max(deltaSeconds, 0), 1);
       const shouldNotify = shouldCheckNotification && Math.random() > 0.7;
-      const thumbnails =
-        state.thumbnails + state.thumbnailsPerSecond * safeDeltaSeconds;
       const likesGained =
-        thumbnails *
-        state.likesPerThumbnail *
-        state.likesMultiplier *
-        safeDeltaSeconds;
+        state.autoLikesPerSecond * state.likesMultiplier * safeDeltaSeconds;
       const totalLikes = state.totalLikes + likesGained;
       const followers = Math.floor(totalLikes / state.likesPerFollower);
       const moneyPerSecond =
         followers * state.moneyPerFollower * state.moneyMultiplier;
       const nextState = {
         ...state,
-        thumbnails,
         likes: state.likes + likesGained,
         totalLikes,
         followers,
         money: state.money + moneyPerSecond * safeDeltaSeconds,
-        likesPerSecond:
-          thumbnails * state.likesPerThumbnail * state.likesMultiplier,
+        likesPerSecond: state.autoLikesPerSecond * state.likesMultiplier,
         moneyPerSecond,
         playTimeSeconds: state.playTimeSeconds + safeDeltaSeconds,
         notifications: shouldNotify

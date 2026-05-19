@@ -13,11 +13,11 @@ https://influencer-clicker.vercel.app
 Current core loop:
 
 ```text
-썸네일 만들기
+콘텐츠 탭
 → 좋아요 증가
 → 팔로워 증가
 → 수익화
-→ 업그레이드로 더 많은 썸네일과 좋아요 생산
+→ 업그레이드로 더 많은 좋아요 생산
 ```
 
 ## Feedback

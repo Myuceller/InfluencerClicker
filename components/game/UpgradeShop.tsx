@@ -21,7 +21,7 @@ export function UpgradeShop() {
         <p className="text-xs font-semibold uppercase text-white/60">
           성장 장치
         </p>
-        <h2 className="text-xl font-bold">썸네일 성능 업그레이드</h2>
+        <h2 className="text-xl font-bold">좋아요 성능 업그레이드</h2>
       </div>
       <div className="grid gap-2.5 sm:gap-3">
         {visibleUpgrades.map(({ upgrade, index }) => (

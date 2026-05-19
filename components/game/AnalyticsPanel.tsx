@@ -5,14 +5,25 @@ import { Card } from "@/components/common/Card";
 import { useGameStore } from "@/features/game/store/useGameStore";
 import { formatNumber } from "@/features/game/utils/formatNumber";
 
+function formatStatNumber(value: number) {
+  if (value < 10 && !Number.isInteger(value)) {
+    return value.toLocaleString("en-US", { maximumFractionDigits: 1 });
+  }
+
+  return formatNumber(value);
+}
+
+function formatMultiplier(value: number) {
+  return `${value.toLocaleString("en-US", { maximumFractionDigits: 2 })}x`;
+}
+
 export function AnalyticsPanel() {
   const {
     totalClicks,
     totalLikes,
-    thumbnailsPerClick,
-    thumbnailsPerSecond,
-    thumbnailMultiplier,
-    likesPerThumbnail,
+    likesPerClick,
+    autoLikesPerSecond,
+    clickMultiplier,
     likesMultiplier,
     likesPerSecond,
     likesPerFollower,
@@ -28,17 +39,16 @@ export function AnalyticsPanel() {
 
   const rows = [
     ["총 클릭 수", formatNumber(totalClicks)],
-    ["클릭당 썸네일", formatNumber(thumbnailsPerClick)],
-    ["클릭 생산 배율", `${formatNumber(thumbnailMultiplier)}x`],
-    ["초당 자동 썸네일", formatNumber(thumbnailsPerSecond)],
-    ["썸네일당 좋아요", formatNumber(likesPerThumbnail)],
-    ["좋아요 배율", `${formatNumber(likesMultiplier)}x`],
-    ["초당 좋아요", formatNumber(likesPerSecond)],
+    ["클릭당 좋아요", formatStatNumber(likesPerClick)],
+    ["클릭 좋아요 배율", formatMultiplier(clickMultiplier)],
+    ["초당 자동 좋아요", formatStatNumber(autoLikesPerSecond)],
+    ["좋아요 배율", formatMultiplier(likesMultiplier)],
+    ["초당 좋아요", formatStatNumber(likesPerSecond)],
     ["총 누적 좋아요", formatNumber(totalLikes)],
     ["다음 팔로워까지", `${formatNumber(likesUntilNextFollower)} 좋아요`],
     ["팔로워", formatNumber(followers)],
-    ["수익 배율", `${formatNumber(moneyMultiplier)}x`],
-    ["초당 수익", `${formatNumber(moneyPerSecond)}원`],
+    ["수익 배율", formatMultiplier(moneyMultiplier)],
+    ["초당 수익", `${formatStatNumber(moneyPerSecond)}원`],
     [
       "플레이 시간",
       `${Math.floor(wholePlayTimeSeconds / 60)}분 ${wholePlayTimeSeconds % 60}초`,
@@ -53,7 +63,7 @@ export function AnalyticsPanel() {
           <p className="text-xs font-semibold uppercase text-white/60">
             성장 흐름
           </p>
-          <h2 className="text-xl font-bold">썸네일 → 좋아요 → 팔로워 → 수익</h2>
+          <h2 className="text-xl font-bold">좋아요 → 팔로워 → 수익</h2>
         </div>
       </div>
       <dl className="grid gap-3">
