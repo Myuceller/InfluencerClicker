@@ -17,10 +17,19 @@ type ClickBurst = {
   y: number;
 };
 
+type ThumbnailStamp = {
+  id: number;
+  x: number;
+  y: number;
+  color: string;
+};
+
 function ThumbnailPreview({
   thumbnailVariant,
+  stamps,
 }: {
   thumbnailVariant: number;
+  stamps: ThumbnailStamp[];
 }) {
   const upgradeLevels = useGameStore((state) => state.upgradeLevels);
   const redArrowLevel = upgradeLevels["red-arrow"] ?? 0;
@@ -116,6 +125,22 @@ function ThumbnailPreview({
             ))}
           </div>
         )}
+
+        {stamps.map((stamp) => (
+          <motion.span
+            key={stamp.id}
+            initial={{ opacity: 0, scale: 0.25, rotate: -12 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0.25, 1.15, 1], rotate: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            className={`absolute grid size-4 place-items-center border-2 border-slate-950 ${stamp.color}`}
+            style={{
+              left: `${stamp.x}%`,
+              top: `${stamp.y}%`,
+            }}
+          >
+            <span className="size-1.5 bg-white" />
+          </motion.span>
+        ))}
       </div>
       <span className="absolute -right-3 -top-3 rounded bg-yellow-300 px-2 py-1 text-xs font-black text-slate-950 shadow">
         NEW
@@ -284,6 +309,7 @@ export function ClickButton() {
   const followers = useGameStore((state) => state.followers);
   const createThumbnail = useGameStore((state) => state.createThumbnail);
   const [bursts, setBursts] = useState<ClickBurst[]>([]);
+  const [stamps, setStamps] = useState<ThumbnailStamp[]>([]);
   const [thumbnailVariant, setThumbnailVariant] = useState(0);
 
   function handleCreateThumbnail(event: React.MouseEvent<HTMLButtonElement>) {
@@ -297,12 +323,22 @@ export function ClickButton() {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
+    const stamp = {
+      id: burst.id,
+      x: 14 + Math.random() * 68,
+      y: 14 + Math.random() * 58,
+      color: ["bg-red-500", "bg-yellow-300", "bg-cyan-300", "bg-pink-500"][
+        Math.floor(Math.random() * 4)
+      ],
+    };
 
     setThumbnailVariant((current) => (current + 1) % 4);
     setBursts((current) => [...current.slice(-8), burst]);
+    setStamps((current) => [...current.slice(-11), stamp]);
     window.setTimeout(() => {
       setBursts((current) => current.filter((item) => item.id !== burst.id));
-    }, 700);
+      setStamps((current) => current.filter((item) => item.id !== stamp.id));
+    }, 950);
   }
 
   return (
@@ -330,7 +366,7 @@ export function ClickButton() {
         className="relative flex min-h-64 w-full overflow-hidden flex-col items-center justify-center rounded-lg border border-white/20 bg-gradient-to-br from-white via-pink-100 to-fuchsia-200 text-slate-950 shadow-2xl shadow-pink-950/25 sm:min-h-80"
       >
         <div className="absolute inset-0 bg-[linear-gradient(120deg,_transparent_0%,_rgba(255,255,255,0.7)_45%,_transparent_62%)] opacity-40" />
-        <ThumbnailPreview thumbnailVariant={thumbnailVariant} />
+        <ThumbnailPreview thumbnailVariant={thumbnailVariant} stamps={stamps} />
         <ImagePlus size={44} className="relative" />
         <span className="relative mt-4 text-4xl font-black">썸네일 만들기</span>
         <span className="relative mt-2 inline-flex items-center gap-1 text-sm font-semibold text-slate-700">
