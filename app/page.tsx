@@ -10,6 +10,7 @@ import { ClickButton } from "@/components/game/ClickButton";
 import { GameCloudSync } from "@/components/game/GameCloudSync";
 import { NotificationFeed } from "@/components/game/NotificationFeed";
 import { ResourcePanel } from "@/components/game/ResourcePanel";
+import { UpgradeDecorationStrip } from "@/components/game/UpgradeDecorationStrip";
 import { UpgradeShop } from "@/components/game/UpgradeShop";
 import {
   initializeGame,
@@ -37,7 +38,7 @@ export default function Home() {
     <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.12),_transparent_24%),linear-gradient(135deg,_#ff4d8d_0%,_#7c3aed_48%,_#111827_100%)] px-3 py-3 pb-24 text-white sm:px-6 sm:py-4 lg:px-8 lg:pb-4">
       <GameCloudSync />
       <div className="mx-auto flex max-w-7xl flex-col gap-4">
-        <header className="flex flex-col gap-2 rounded-lg border border-white/15 bg-white/10 p-3 shadow-2xl shadow-black/20 backdrop-blur sm:p-4 md:flex-row md:items-end md:justify-between">
+        <header className="flex flex-col gap-3 rounded-lg border border-white/15 bg-white/10 p-3 shadow-2xl shadow-black/20 backdrop-blur sm:p-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-pink-100">
               크리에이터 대시보드
@@ -46,9 +47,14 @@ export default function Home() {
               Clout Clicker
             </h1>
           </div>
-          <p className="max-w-md text-sm text-white/75">
-            좋아요를 모으고, 팔로워를 키우고, 수익 업그레이드까지 밀어보세요.
-          </p>
+          <div className="flex flex-col gap-3 md:items-end">
+            <p className="max-w-md text-sm text-white/75 md:text-right">
+              좋아요를 모으고, 팔로워를 키우고, 수익 업그레이드까지 밀어보세요.
+            </p>
+            <div className="w-full md:w-80">
+              <AuthPanel />
+            </div>
+          </div>
         </header>
 
         <AnimatePresence mode="wait">
@@ -81,7 +87,7 @@ export default function Home() {
 
               <div className="grid gap-4">
                 <div className={activeTab === "make" ? "block lg:block" : "hidden lg:block"}>
-                  <AuthPanel />
+                  <UpgradeDecorationStrip />
                 </div>
                 <div className={activeTab === "upgrades" ? "block" : "hidden lg:block"}>
                   <UpgradeShop />

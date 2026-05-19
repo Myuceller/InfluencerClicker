@@ -3,11 +3,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/common/Card";
-import { upgrades } from "@/features/game/data/upgrades";
 import { useGameStore } from "@/features/game/store/useGameStore";
 import { formatNumber } from "@/features/game/utils/formatNumber";
 import { playUiBlip } from "@/features/game/utils/sound";
-import { UpgradePixelArt } from "./UpgradePixelArt";
 
 type ClickBurst = {
   id: number;
@@ -362,43 +360,6 @@ function PixelCreatorArt({ totalLikes }: { totalLikes: number }) {
   );
 }
 
-function UpgradeThumbnailBoard() {
-  const upgradeLevels = useGameStore((state) => state.upgradeLevels);
-  const ownedUpgrades = upgrades
-    .filter((upgrade) => (upgradeLevels[upgrade.id] ?? 0) > 0)
-    .slice(0, 18);
-
-  return (
-    <div className="mt-4 rounded-lg border border-white/10 bg-black/15 p-4">
-      <div className="mb-3 flex items-center justify-between gap-3 text-xs font-semibold text-white/65">
-        <span>콘텐츠에 붙은 장식</span>
-        <span>{ownedUpgrades.length}개 활성화</span>
-      </div>
-      <div className="grid min-h-20 grid-cols-6 gap-2 sm:grid-cols-9">
-        {ownedUpgrades.length === 0 ? (
-          <p className="col-span-full self-center text-sm text-white/45">
-            업그레이드를 사면 도트 장식이 하나씩 붙습니다.
-          </p>
-        ) : (
-          ownedUpgrades.map((upgrade) => (
-            <div
-              key={upgrade.id}
-              className="grid place-items-center rounded bg-white/5 p-1"
-              title={upgrade.name}
-            >
-              <UpgradePixelArt
-                upgradeId={upgrade.id}
-                level={upgradeLevels[upgrade.id] ?? 0}
-                compact
-              />
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
-
 export function ClickButton() {
   const likesPerClick = useGameStore((state) => state.likesPerClick);
   const totalLikes = useGameStore((state) => state.totalLikes);
@@ -485,7 +446,6 @@ export function ClickButton() {
         ))}
       </motion.button>
 
-      <UpgradeThumbnailBoard />
       <PixelCreatorArt totalLikes={totalLikes} />
     </Card>
   );
