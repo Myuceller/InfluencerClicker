@@ -363,7 +363,8 @@ export function ClickButton() {
           boxShadow: "0 12px 28px rgba(112, 26, 117, 0.25)",
         }}
         onClick={handleCreateThumbnail}
-        className="relative flex min-h-64 w-full overflow-hidden flex-col items-center justify-center rounded-lg border border-white/20 bg-gradient-to-br from-white via-pink-100 to-fuchsia-200 text-slate-950 shadow-2xl shadow-pink-950/25 sm:min-h-80"
+        onDoubleClick={(event) => event.preventDefault()}
+        className="relative flex min-h-64 w-full touch-none select-none overflow-hidden flex-col items-center justify-center rounded-lg border border-white/20 bg-gradient-to-br from-white via-pink-100 to-fuchsia-200 text-slate-950 shadow-2xl shadow-pink-950/25 [-webkit-touch-callout:none] sm:min-h-80"
       >
         <div className="absolute inset-0 bg-[linear-gradient(120deg,_transparent_0%,_rgba(255,255,255,0.7)_45%,_transparent_62%)] opacity-40" />
         <ThumbnailPreview thumbnailVariant={thumbnailVariant} stamps={stamps} />

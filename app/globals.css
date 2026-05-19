@@ -11,6 +11,7 @@
 html {
   min-height: 100%;
   touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -25,5 +26,8 @@ body {
 button,
 [role="button"] {
   touch-action: manipulation;
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
 }
