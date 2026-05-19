@@ -36,7 +36,7 @@ export default function Home() {
             </h1>
           </div>
           <p className="max-w-md text-sm text-white/75">
-            관심을 생산하고 반응을 수확하며, 숫자가 전부인 척해보세요.
+            썸네일을 만들고, 좋아요를 모으고, 팔로워를 수익으로 바꿔보세요.
           </p>
         </header>
 
